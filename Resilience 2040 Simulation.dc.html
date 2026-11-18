@@ -307,9 +307,64 @@
     </div>
     <div style="display:flex;gap:4px;padding:4px;border:1px solid #dcdad2;border-radius:8px;background:#f5f4ef">
       <button sc-camel-on-click="{{ toSim }}" style="border:0;border-radius:6px;padding:8px 14px;font-size:14px;font-weight:500;cursor:pointer;background:{{ tabSimBg }};color:{{ tabSimFg }}">Simulation</button>
+      <button sc-camel-on-click="{{ toDrv }}" style="border:0;border-radius:6px;padding:8px 14px;font-size:14px;font-weight:500;cursor:pointer;background:{{ tabDrvBg }};color:{{ tabDrvFg }}">Drivers</button>
       <button sc-camel-on-click="{{ toGap }}" style="border:0;border-radius:6px;padding:8px 14px;font-size:14px;font-weight:500;cursor:pointer;background:{{ tabGapBg }};color:{{ tabGapFg }}">Paper gap analysis</button>
     </div>
   </header>
+
+  <sc-if value="{{ isDrv }}" hint-placeholder-val="{{ false }}">
+    <main style="max-width:1200px;margin:0 auto;padding:36px 28px 64px;display:flex;flex-direction:column;gap:32px">
+      <div style="display:flex;flex-direction:column;gap:8px;max-width:760px">
+        <h1 style="margin:0;font-size:28px;font-weight:600;line-height:1.2">Drivers of change</h1>
+        <p style="margin:0;color:#5b5d57;text-wrap:pretty">Five drivers set the external conditions for SIDS disaster-risk financing. Each has three states. At setup, each driver gets one choice: Likely, Neutral or Unlikely. The choice sets its state in each period, and stakeholder decisions react to those states. The three 2040 scenarios come from where the two axes end up.</p>
+      </div>
+      <section style="display:flex;flex-direction:column;gap:14px">
+        <h2 style="margin:0;font-size:20px;font-weight:600">The five drivers</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px">
+          <sc-for list="{{ drvCards }}" as="dc" hint-placeholder-count="5">
+            <article style="border:1px solid #dcdad2;border-radius:10px;background:#fbfaf7;padding:18px;display:flex;flex-direction:column;gap:10px">
+              <h3 style="margin:0;font-size:17px;font-weight:600">{{ dc.name }}</h3>
+              <p style="margin:0;font-size:13px;color:#5b5d57;line-height:1.45">{{ dc.role }}</p>
+              <div style="display:flex;flex-direction:column;gap:8px;font-size:14px;line-height:1.45">
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:oklch(0.45 0.09 195)">LIKELY</span><span>{{ dc.pos }}</span></div>
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:#5b5d57">NEUTRAL</span><span>{{ dc.med }}</span></div>
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:oklch(0.45 0.09 30)">UNLIKELY</span><span>{{ dc.neg }}</span></div>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </section>
+      <section style="display:flex;flex-direction:column;gap:14px">
+        <h2 style="margin:0;font-size:20px;font-weight:600">What each 2040 scenario means</h2>
+        <p style="margin:0;color:#5b5d57;max-width:820px;text-wrap:pretty">The scenario is set by the final position on the two axes. The model rule is shown for each. The driver conditions are hypotheses to test in play, not results.</p>
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px">
+          <sc-for list="{{ scenCards }}" as="sc" hint-placeholder-count="3">
+            <article style="border:1px solid #dcdad2;border-left:6px solid {{ sc.c }};border-radius:10px;background:#fbfaf7;padding:18px;display:flex;flex-direction:column;gap:10px">
+              <h3 style="margin:0;font-size:17px;font-weight:600">{{ sc.n }}</h3>
+              <p style="margin:0;font-size:14px;line-height:1.5">{{ sc.t }}</p>
+              <p style="margin:0;font-size:13px;color:#5b5d57;line-height:1.45"><strong style="color:#1c1d1a;font-weight:600">Model rule.</strong> {{ sc.rule }}</p>
+              <p style="margin:0;font-size:13px;color:#5b5d57;line-height:1.45"><strong style="color:#1c1d1a;font-weight:600">Driver conditions (hypothesis).</strong> {{ sc.cond }}</p>
+            </article>
+          </sc-for>
+        </div>
+      </section>
+      <section style="display:flex;flex-direction:column;gap:14px">
+        <h2 style="margin:0;font-size:20px;font-weight:600">What each choice does over time</h2>
+        <p style="margin:0;color:#5b5d57;max-width:820px;text-wrap:pretty">At setup, the facilitator sets one choice per driver. Each row shows how that choice plays out in the periods 2026–2029, 2030–2034 and 2035–2040.</p>
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;background:#fbfaf7">
+            <thead><tr style="text-align:left;border-bottom:1px solid #dcdad2"><th style="padding:10px 12px;font-weight:600">Choice</th><th style="padding:10px 12px;font-weight:600">What moves</th></tr></thead>
+            <tbody>
+              <tr style="border-bottom:1px solid #e7e5de"><td style="padding:10px 12px;vertical-align:top;font-weight:600">Likely</td><td style="padding:10px 12px">Moves to Likely in 2030–2034 and stays there. Hazard has no change, because sea-level rise is already locked in.</td></tr>
+              <tr style="border-bottom:1px solid #e7e5de"><td style="padding:10px 12px;vertical-align:top;font-weight:600">Neutral</td><td style="padding:10px 12px">Stays Neutral in every period. This is today's trend.</td></tr>
+              <tr style="border-bottom:1px solid #e7e5de"><td style="padding:10px 12px;vertical-align:top;font-weight:600">Unlikely</td><td style="padding:10px 12px">Moves to Unlikely in 2030–2034 and stays there. Hazard moves to Unlikely only in 2035–2040.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="margin:0;font-size:13px;color:#5b5d57;max-width:820px;text-wrap:pretty">States: Likely is the favourable trajectory for SIDS, Neutral is today's trend, and Unlikely is the adverse trajectory. Each card states the direction for SIDS, so no card needs a separate High or Low label.</p>
+      </section>
+    </main>
+  </sc-if>
 
   <sc-if value="{{ isGap }}" hint-placeholder-val="{{ false }}">
     <main style="max-width:1200px;margin:0 auto;padding:36px 28px 64px;display:flex;flex-direction:column;gap:28px">
@@ -394,14 +449,36 @@
           </sc-for>
         </div>
       </div>
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap"><h2 style="margin:0;font-size:18px;font-weight:600">Driver pathway</h2><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5b5d57">Scripted external conditions · facilitator picks one</span></div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap">
-          <sc-for list="{{ pathwayOpts }}" as="pw" hint-placeholder-count="3"><button sc-camel-on-click="{{ pw.pick }}" style="border:1px solid #1c1d1a;border-radius:8px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer;background:{{ pw.bg }};color:{{ pw.fg }}">{{ pw.label }}</button></sc-for>
-        </div>
+                  <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <button sc-camel-on-click="{{ goDrivers }}" style="border:0;border-radius:8px;padding:14px 22px;font-size:15px;font-weight:600;cursor:{{ beginCursor }};background:{{ beginBg }};color:#f5f4ef">Next · choose drivers</button>
+        <span style="font-size:13px;color:#5b5d57">Choose the roles in play, then set the drivers of change.</span>
       </div>
+    </main>
+  </sc-if>
+
+  <sc-if value="{{ isDrvSetup }}" hint-placeholder-val="{{ false }}">
+    <main style="max-width:1200px;margin:0 auto;padding:36px 28px 64px;display:flex;flex-direction:column;gap:28px">
+      <div style="display:flex;flex-direction:column;gap:8px;max-width:760px">
+        <h1 style="margin:0;font-size:28px;font-weight:600;line-height:1.2">Drivers of change</h1>
+        <p style="margin:0;color:#5b5d57;text-wrap:pretty">Set one state per driver before round 1. The choice sets how each driver moves in the three periods, and the stakeholders react to it.</p>
+      </div>
+<div style="display:flex;flex-direction:column;gap:14px">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap"><h2 style="margin:0;font-size:18px;font-weight:600">Drivers of change</h2><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5b5d57">Set one state per driver · the facilitator decides</span></div>
+        <sc-for list="{{ drvSetup }}" as="ds" hint-placeholder-count="5">
+          <div style="border:1px solid #dcdad2;border-radius:10px;background:#fbfaf7;padding:14px;display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600;font-size:15px">{{ ds.name }}</span><span style="font-size:12px;color:#5b5d57">{{ ds.role }}</span></div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
+              <button sc-camel-on-click="{{ ds.a.pick }}" style="text-align:left;cursor:pointer;border:1px solid {{ ds.a.border }};background:{{ ds.a.bg }};box-shadow:{{ ds.a.shadow }};border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;color:#1c1d1a"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:{{ ds.a.color }}">{{ ds.a.label }}</span><span style="font-size:13px;line-height:1.4">{{ ds.a.desc }}</span></button>
+              <button sc-camel-on-click="{{ ds.b.pick }}" style="text-align:left;cursor:pointer;border:1px solid {{ ds.b.border }};background:{{ ds.b.bg }};box-shadow:{{ ds.b.shadow }};border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;color:#1c1d1a"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:{{ ds.b.color }}">{{ ds.b.label }}</span><span style="font-size:13px;line-height:1.4">{{ ds.b.desc }}</span></button>
+              <button sc-camel-on-click="{{ ds.c.pick }}" style="text-align:left;cursor:pointer;border:1px solid {{ ds.c.border }};background:{{ ds.c.bg }};box-shadow:{{ ds.c.shadow }};border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;color:#1c1d1a"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:{{ ds.c.color }}">{{ ds.c.label }}</span><span style="font-size:13px;line-height:1.4">{{ ds.c.desc }}</span></button>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+
       <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-        <button sc-camel-on-click="{{ start }}" style="border:0;border-radius:8px;padding:14px 22px;font-size:15px;font-weight:600;cursor:{{ beginCursor }};background:{{ beginBg }};color:#f5f4ef">Begin round 1 · 2026–2029</button>
+        <button sc-camel-on-click="{{ backSetup }}" style="border:1px solid #1c1d1a;background:transparent;border-radius:8px;padding:14px 22px;font-size:15px;font-weight:600;cursor:pointer;color:#1c1d1a">Back to roles</button>
+        <button sc-camel-on-click="{{ start }}" style="border:0;border-radius:8px;padding:14px 22px;font-size:15px;font-weight:600;cursor:pointer;background:#1c1d1a;color:#f5f4ef">Begin round 1 · 2026–2029</button>
         <span style="font-size:13px;color:#5b5d57">Run on one shared screen. The facilitator records each role’s decision.</span>
       </div>
     </main>
@@ -441,15 +518,15 @@
               <h2 style="margin:0;font-size:24px;font-weight:600;line-height:1.2">{{ roundTitle }}</h2>
               <p style="margin:0;max-width:820px;text-wrap:pretty">{{ roundBrief }}</p>
               <div style="display:flex;flex-direction:column;gap:8px">
-                <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#5b5d57">Drivers this period · pathway: {{ pathwayName }}</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#5b5d57">Drivers this period</span>
                 <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px">
-                  <sc-for list="{{ driverCards }}" as="dc" hint-placeholder-count="5"><div style="border:1px solid #dcdad2;border-radius:8px;padding:12px;background:#ffffff;display:flex;flex-direction:column;gap:6px"><span style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span style="font-weight:600;font-size:14px">{{ dc.name }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:{{ dc.color }}">{{ dc.state }}</span></span><span style="font-size:13px;color:#5b5d57;line-height:1.45">{{ dc.desc }}</span></div></sc-for>
+                  <sc-for list="{{ driverCards }}" as="dc" hint-placeholder-count="5"><div style="border:1px solid #dcdad2;border-radius:8px;padding:12px;background:#ffffff;display:flex;flex-direction:column;gap:6px"><span style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span style="font-weight:600;font-size:14px">{{ dc.name }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:{{ dc.color }}">{{ dc.state }}</span></span><span style="font-size:13px;color:#5b5d57;line-height:1.45">{{ dc.desc }}</span><span style="font-size:12px;font-weight:600;color:#1c1d1a;line-height:1.45">{{ dc.fx }}</span></div></sc-for>
                 </div>
               </div>
               <div style="display:flex;flex-wrap:wrap;gap:20px;padding-top:4px">
                 <div style="display:flex;flex-direction:column;gap:4px;flex:1 1 240px">
                   <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#5b5d57">Background trend this period</span>
-                  <span style="font-size:14px">{{ roundBase }}</span>
+                  <span style="font-size:14px">{{ roundBase }}</span><span style="font-size:14px;font-weight:600;color:#1c1d1a">{{ roundDrvFx }}</span>
                 </div>
                 <div style="display:flex;flex-direction:column;gap:4px;flex:2 1 320px">
                   <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#5b5d57">Signposts to watch</span>
@@ -471,6 +548,11 @@
                 <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline">
                   <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#b9bab3">Round {{ roundNum }} result</span>
                   <span style="font-size:14px">Trending toward <strong style="font-weight:600">{{ trendName }}</strong></span>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:4px;font-size:14px;color:#d6d7d0">
+                  <span>Background trend: {{ resBaseTxt }}</span>
+                  <span>From drivers: {{ resDrvTxt }}</span>
+                  <span>From decisions and coalitions: {{ resDecTxt }}</span>
                 </div>
                 <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px">
                   <sc-for list="{{ resultDeltas }}" as="rd" hint-placeholder-count="9">
@@ -695,25 +777,93 @@ const SCEN = {
  s2:{n:'Fragmented Patchwork',c:AMBER,t:'The Caribbean and Pacific advance while the AIS and micro-states lag. Cooperation continues but is under-resourced, debt deepens and innovation is unevenly distributed.',q:['What could stop the gap between regions from widening?','Which interventions and partnerships could move this scenario toward a better outcome?']},
  s3:{n:'Retrenchment and Exposure',c:CORAL,t:'ODA and climate finance decline, multilateralism fractures, shocks intensify, the protection gap widens and SSTrC is starved of financing.',q:['With ODA and multilateral finance falling, what alternatives remain? Test regional institutions, cooperatives and other non-traditional actors.','What could each stakeholder realistically do?']},
 };
-const DRIVERS = [
- {id:'haz',name:'Climate hazard and loss',desc:{Positive:'Losses grow more slowly than the trend.',Medium:'Current trend: losses rise, pace uncertain.',Negative:'Losses accelerate, with more events above 50% of GDP.'}},
- {id:'coop',name:'SSTrC and international cooperation',desc:{Positive:'Sevilla commitments are delivered and SSTrC is financed.',Medium:'Commitments made, delivery slow, ODA keeps falling.',Negative:'ODA cuts deepen, multilateralism fragments, SSTrC is starved.'}},
- {id:'fin',name:'Finance architecture and private capital',desc:{Positive:'Regional reinsurance platform works; blended finance scales.',Medium:'Products stay piecemeal; reinsurance short-term and volatile.',Negative:'Reinsurers retreat; private capital stays away.'}},
- {id:'inst',name:'Regional institutions and SIDS capacity',desc:{Positive:'AIS pool created; CCRIF and PCRIC grow; MVI shapes allocations.',Medium:'Pools expand slowly; the AIS has no pool; gaps persist.',Negative:'Capacity lost once projects end; pools underfunded.'}},
- {id:'tech',name:'Technology and data',desc:{Positive:'SIDS own their risk data and trigger design.',Medium:'Data is donor- and MDB-driven; SIDS cannot control triggers.',Negative:'Data stays external and opaque; basis risk erodes trust.'}}
-];
-const PATHWAYS = {
- Positive:{haz:['Medium','Medium','Medium'],coop:['Medium','Positive','Positive'],fin:['Medium','Positive','Positive'],inst:['Medium','Positive','Positive'],tech:['Medium','Positive','Positive']},
- Medium:{haz:['Medium','Medium','Medium'],coop:['Medium','Medium','Medium'],fin:['Medium','Medium','Medium'],inst:['Medium','Medium','Medium'],tech:['Medium','Medium','Medium']},
- Negative:{haz:['Medium','Medium','Negative'],coop:['Medium','Negative','Negative'],fin:['Medium','Negative','Negative'],inst:['Medium','Negative','Negative'],tech:['Medium','Negative','Negative']}
+
+// Site selector: 'A' = fixed decisions (ROUNDS options); 'B' = decisions by driver state (B_OPTIONS).
+const SITE = 'A';
+const PRIMARY = {car:'fin',pac:'inst',ais:'inst',mdb:'coop',ins:'fin',reg:'inst',lm:'fin',unossc:'coop',un:'coop'};
+const B_OPTIONS = {
+ car:{Likely:[o('Expand CCRIF into the next layer','Use the regional platform to cut premiums per unit of cover.',{pre:5,pool:2,debt:-1}),o('Take a Global Shield premium subsidy','Cover the smallest members first.',{pre:3,reach:2,trust:1}),o('Issue a sovereign cat bond next to CCRIF','Draw private investors into the stack.',{pre:4,debt:-2,a:1})],
+      Neutral:[o('Keep CCRIF cover and top up the reserve','Hold the current layer and add a small buffer.',{pre:2,debt:1}),o('Buy parametric cover for the highest-risk layer only','Concentrate spend where losses are largest.',{pre:3,gap:-1}),o('Defer the next renewal and rely on the budget','Accept more gap for one cycle.',{gap:2,debt:1})],
+      Unlikely:[o('Cut cover to what the budget can pay','Keep the core layer only.',{pre:-2,debt:1,gap:2}),o('Borrow to keep premiums paid','Protect cover at a higher debt cost.',{pre:2,debt:3}),o('Hold a self-funded reserve instead','Accept the risk to save premiums.',{pre:-1,gap:1})]},
+ pac:{Likely:[o('Join a shared Pacific–AIS pool','Pool premiums across the two regions.',{pool:4,pre:2,trust:1}),o('Offer PCRIC cover through cooperatives','Extend cover below the sovereign level.',{reach:4,pre:2}),o('Build a Pacific trigger model with the SIDS Centre','Keep the model in-country.',{data:3,b:1})],
+      Neutral:[o('Add one member state to PCRIC','Widen the pool slowly.',{pool:2,reach:1}),o('Fund a trigger review for the Pacific Resilience Facility','Check whether triggers fit local losses.',{data:1,b:1}),o('Rely on donor technical assistance','Save budget but keep the gap in capacity.',{b:1,debt:1})],
+      Unlikely:[o('Rely on a one-off donor reserve','Fill the gap with donor money for one cycle.',{pool:-1,debt:1,gap:1}),o('Accept a discretionary payment','Drop trigger cover for ad hoc relief.',{reach:-2,trust:-2}),o('Keep the project team on state budget','Protect the know-how at a fiscal cost.',{b:1,debt:2})]},
+ ais:{Likely:[o('Launch the AIS pool with a premium subsidy','Start with the smallest states.',{pool:5,pre:3,b:1}),o('Join ARC or SEADRIF while the study runs','Get cover now, before the pool exists.',{pre:3,pool:1}),o('Share data with the Pacific pools','Build trigger design on existing models.',{data:2,trust:2})],
+      Neutral:[o('Commission the AIS pool feasibility study','Start the work without committing to a pool.',{b:1,pool:1}),o('Buy regional reinsurance individually','Pay for cover without pooling.',{pre:2,debt:1}),o('Accept the protection gap while the study runs','Wait for a decision.',{gap:2})],
+      Unlikely:[o('Buy cover individually at market price','Pay the full premium without a pool.',{pre:2,debt:2}),o('Wait for donors to fund a pool','Accept the protection gap until funding arrives.',{gap:2,pool:-1}),o('Borrow for reconstruction after each event','Rely on post-disaster debt.',{debt:3,gap:1})]},
+ mdb:{Likely:[o('Guarantee the regional reinsurance platform','Lower the cost of cover for the pools.',{pre:4,pool:2,a:1}),o('Fund micro-state premiums through the Global Shield','Reach the smallest states first.',{reach:3,pre:3}),o('Tie concessional loans to pre-arranged cover','Make cover a condition of finance.',{pre:4,debt:-2})],
+      Neutral:[o('Co-finance one pilot pool','Test pooled cover with a single partner.',{pre:2,a:1}),o('Keep concessional lines at the current level','Continue lending as before.',{debt:1}),o('Offer a debt swap alongside new lending','Turn some debt into resilience finance.',{debt:-1,pre:1})],
+      Unlikely:[o('Cut concessional lines and shift to loans','Keep the lending but raise the debt.',{debt:3,a:-1}),o('Keep pledges but delay disbursement','Hold the money back.',{gap:2,trust:-2}),o('Fund only a small pilot','Limit exposure to pooled risk.',{pre:1,a:-1})]},
+ ins:{Likely:[o('Enter SIDS markets with CCRIF-based products','Reuse a model that already works.',{pre:4,reach:1,trust:1}),o('Offer multi-year reinsurance to the pools','Give the pools price stability.',{pool:3,pre:3}),o('Co-develop products with SIDS-held data','Use local data for pricing.',{data:2,pre:2,trust:2})],
+      Neutral:[o('Expand selectively in the Caribbean','Enter the markets with the best data.',{pre:2,pool:1}),o('Price cover at market rates with standard triggers','Keep the usual terms.',{pre:1,debt:1}),o('Hold capacity and wait','Write less until the market settles.',{pre:-1})],
+      Unlikely:[o('Withdraw from the smaller SIDS markets','Leave the riskiest markets.',{pre:-3,pool:-2,gap:2}),o('Raise premiums to market price','Keep writing cover at a higher cost.',{pre:-2,debt:1}),o('Offer only short-term, tight-trigger cover','Limit the payout and the exposure.',{pre:-1,reach:-2,trust:-1})]},
+ reg:{Likely:[o('Add new members to CCRIF and PCRIC','Widen the pools.',{pool:4,reach:2}),o('Run a joint training programme for the three regions','Share the know-how.',{b:3,trust:2}),o('Adopt the MVI in member allocation rules','Use vulnerability, not only income.',{b:2,pre:2})],
+      Neutral:[o('Launch a data-sharing pilot between the pools','Test shared data on one product.',{data:2,trust:1}),o('Hold membership and improve claims handling','Build trust through service.',{trust:2}),o('Expand one product line','Add cover for one more hazard.',{pool:2,reach:1})],
+      Unlikely:[o('Keep membership but cut services','Protect the pool and drop the extras.',{pool:-1,trust:-2,b:-1}),o('Raise member contributions','Ask members to pay more.',{trust:-3,pool:1}),o('Pause new products until funding recovers','Stop launching products.',{pre:-2,gap:1})]},
+ lm:{Likely:[o('Pay households through mobile wallets','Follow the Fiji PICAP model.',{reach:5,trust:2}),o('Route payouts through credit unions and cooperatives','Use channels people already trust.',{reach:4,trust:2}),o('Add diaspora networks as a payment channel','Reach households abroad who support families.',{reach:3,pre:1})],
+      Neutral:[o('Pay through existing credit unions','Use channels that already work.',{reach:3,trust:1}),o('Run a payout pilot in one region','Test delivery before scaling.',{reach:2}),o('Delay payouts until verification','Check beneficiaries first.',{reach:-1,trust:1})],
+      Unlikely:[o('Keep the programme but delay payouts','Wait for funds to clear.',{reach:-3,trust:-3}),o('Pay out only to registered beneficiaries','Limit payouts to those already in the system.',{reach:-2,gap:1}),o('Hold cash reserves locally','Pay from local stock while funds are missing.',{reach:1,pre:-1})]},
+ unossc:{Likely:[o('Convene an AIS pool feasibility exchange','Bring the regions together.',{pool:3,a:2}),o('Broker a structured interface for private partners','Match SIDS demand with investors.',{pre:3,a:1}),o('Host a regional data-sharing platform','Link SIDS, space agencies and pools.',{data:4,trust:2})],
+      Neutral:[o('Run one convening a year for the AIS study','Keep the thread alive.',{a:1}),o('Share Caribbean lessons with the Pacific','Use the CCRIF experience.',{a:1,trust:1}),o('Pause brokering until funding returns','Hold back new partnerships.',{a:-1})],
+      Unlikely:[o('Convene less often, with less money','Keep the network alive with fewer meetings.',{a:-1,trust:-1}),o('Broker in kind only','Offer expertise but no funding.',{pre:-1,a:-1}),o('Fund a pilot with a Global Shield partner','Depend on one partner to keep going.',{pre:1,debt:1})]},
+ un:{Likely:[o('Pool UN country funds into pre-arranged finance','Release money when triggers fire.',{pre:4,reach:3}),o('Coordinate joint programmes across UNDP, UNDRR and OCHA','Share the work across agencies.',{a:2,b:1}),o('Push debt pause clauses in UN debt dialogues','Back SIDS in creditor talks.',{debt:-3,trust:2})],
+      Neutral:[o('Coordinate existing programmes','Align the agencies without new money.',{a:1,b:1}),o('Ring-fence a small anticipatory fund','Hold back money for triggers.',{pre:2,reach:1}),o('Keep current programmes with no new commitment','Maintain the status quo.',{gap:1})],
+      Unlikely:[o('Consolidate offices and cut duplicated programmes','Reduce overlap under budget pressure.',{a:-1,b:-1}),o('Shift funding from prevention to emergency response','Respond after the event.',{gap:2,debt:2}),o('Drop monitoring to save money','Accept less data on outcomes.',{data:-2,trust:-1})]}
 };
-// Provisional placeholder effects, added to each round's trend. Medium adds nothing.
+
+// Site B linked decisions. Each B option carries a theme key (or 'none'); a linked decision
+// forms when every required role's chosen option carries one of the listed keys.
+const B_KEYS = {
+ car:{Likely:['triangular','none','facility'],Neutral:['pool','facility','none'],Unlikely:['none','none','none']},
+ pac:{Likely:['pool','rails','data'],Neutral:['pool','data','compact'],Unlikely:['none','none','none']},
+ ais:{Likely:['pool','facility','data'],Neutral:['pool','facility','none'],Unlikely:['none','none','none']},
+ mdb:{Likely:['facility','triangular','mvi'],Neutral:['triangular','none','mvi'],Unlikely:['none','none','none']},
+ ins:{Likely:['facility','facility','data'],Neutral:['pool','none','none'],Unlikely:['none','none','none']},
+ reg:{Likely:['pool','compact','mvi'],Neutral:['data','compact','facility'],Unlikely:['none','none','none']},
+ lm:{Likely:['rails','rails','rails'],Neutral:['rails','rails','none'],Unlikely:['none','none','none']},
+ unossc:{Likely:['pool','triangular','data'],Neutral:['pool','compact','none'],Unlikely:['none','none','none']},
+ un:{Likely:['triangular','compact','mvi'],Neutral:['compact','triangular','none'],Unlikely:['none','none','none']}
+};
+const B_COALS = [
+ [{n:'AIS pool moves to design phase',req:{ais:['pool'],reg:['pool']},fx:{pool:5,b:1}},
+  {n:'SIDS data compact',req:{reg:['data'],ins:['data']},fx:{data:5,b:1}},
+  {n:'Last-mile payout rails',req:{lm:['rails'],un:['triangular']},fx:{reach:5}}],
+ [{n:'AIS regional risk pool founded',req:{ais:['pool'],mdb:['facility'],reg:['pool']},fx:{pool:10,b:3,gap:-4}},
+  {n:'Interregional data commons',req:{car:['triangular'],pac:['data']},fx:{data:6,b:2}},
+  {n:'Triangular finance deal closes',req:{unossc:['triangular'],mdb:['triangular']},fx:{a:3,pre:3}}],
+ [{n:'SIDS-wide reinsurance facility',req:{reg:['facility'],ins:['facility'],ais:['facility']},fx:{pool:6,gap:-5,b:2}},
+  {n:'Continuity-of-state compact',req:{pac:['compact'],un:['compact']},fx:{trust:4,b:2}},
+  {n:'MVI-based concessional compact',req:{mdb:['mvi'],reg:['mvi']},fx:{a:3,debt:-3}}]
+];
+const DRV_ROLE = {
+ haz:'Background: acts in every scenario. The paper treats worsening as near-certain.',
+ coop:'Moves axis A, international cooperation.',
+ fin:'Moves the pre-arranged finance share and debt stress.',
+ inst:'Moves axis B, SIDS agency, and regional pooling.',
+ tech:'Moves SIDS data ownership and the protection gap.'
+};
+const DRIVERS = [
+ {id:'haz',name:'Climate hazard and loss',desc:{Likely:'No change in the model. Sea-level rise is locked in, so the trend holds.',Neutral:'Current trend: losses rise, pace uncertain.',Unlikely:'Losses accelerate, with more events above 50% of GDP.'}},
+ {id:'coop',name:'SSTrC and international cooperation',desc:{Likely:'Sevilla commitments are delivered and SSTrC is financed.',Neutral:'Commitments made, delivery slow, ODA keeps falling.',Unlikely:'ODA cuts deepen, multilateralism fragments, SSTrC is starved.'}},
+ {id:'fin',name:'Finance architecture and private capital',desc:{Likely:'Regional reinsurance platform works; blended finance scales.',Neutral:'Products stay piecemeal; reinsurance short-term and volatile.',Unlikely:'Reinsurers retreat; private capital stays away.'}},
+ {id:'inst',name:'Regional institutions and SIDS capacity',desc:{Likely:'AIS pool created; CCRIF and PCRIC grow; MVI shapes allocations.',Neutral:'Pools expand slowly; the AIS has no pool; gaps persist.',Unlikely:'Capacity lost once projects end; pools underfunded.'}},
+ {id:'tech',name:'Technology and data',desc:{Likely:'SIDS own their risk data and trigger design.',Neutral:'Data is donor- and MDB-driven; SIDS cannot control triggers.',Unlikely:'Data stays external and opaque; basis risk erodes trust.'}}
+];
+// Each driver gets one setup choice. The choice sets its state in each period (2026-29, 2030-34, 2035-40).
+const DPAT = {
+ haz:{Likely:['Neutral','Neutral','Neutral'],Neutral:['Neutral','Neutral','Neutral'],Unlikely:['Neutral','Neutral','Unlikely']},
+ coop:{Likely:['Neutral','Likely','Likely'],Neutral:['Neutral','Neutral','Neutral'],Unlikely:['Neutral','Unlikely','Unlikely']},
+ fin:{Likely:['Neutral','Likely','Likely'],Neutral:['Neutral','Neutral','Neutral'],Unlikely:['Neutral','Unlikely','Unlikely']},
+ inst:{Likely:['Neutral','Likely','Likely'],Neutral:['Neutral','Neutral','Neutral'],Unlikely:['Neutral','Unlikely','Unlikely']},
+ tech:{Likely:['Neutral','Likely','Likely'],Neutral:['Neutral','Neutral','Neutral'],Unlikely:['Neutral','Unlikely','Unlikely']}
+};
+// Provisional placeholder effects, added to each round's trend. Neutral adds nothing.
 const DFX = {
- haz:{Positive:{gap:-2},Medium:{},Negative:{gap:2,debt:2}},
- coop:{Positive:{a:2},Medium:{},Negative:{a:-2,trust:-2}},
- fin:{Positive:{pre:2},Medium:{},Negative:{pre:-2,debt:1}},
- inst:{Positive:{b:2,pool:2},Medium:{},Negative:{b:-2,pool:-2}},
- tech:{Positive:{data:2},Medium:{},Negative:{data:-2,gap:1}}
+ haz:{Likely:{gap:-2},Neutral:{},Unlikely:{gap:2,debt:2}},
+ coop:{Likely:{a:2},Neutral:{},Unlikely:{a:-2,trust:-2}},
+ fin:{Likely:{pre:2},Neutral:{},Unlikely:{pre:-2,debt:1}},
+ inst:{Likely:{b:2,pool:2},Neutral:{},Unlikely:{b:-2,pool:-2}},
+ tech:{Likely:{data:2},Neutral:{},Unlikely:{data:-2,gap:1}}
 };
 const NOREG = [{tag:'cap',n:'Capacity building'},{tag:'data',n:'SIDS-owned data'},{tag:'pool',n:'Regional pooling'},{tag:'priv',n:'Greater private-sector involvement'},{tag:'match',n:'Global Alliance matchmaking interface'}];
 const roleName = id => ROLES.find(r=>r.id===id).name;
@@ -723,7 +873,7 @@ const pct = v => (v+R)/(2*R)*100;
 
 class Component extends DCLogic {
   state = this.fresh();
-  fresh(){ return {tab:'sim',screen:'setup',pathway:'Medium',active:Object.fromEntries(ROLES.map(r=>[r.id,false])),round:0,choices:[{},{},{}],resolved:false,vals:{...START},trail:[],result:null,wild:null,wildUsed:{}}; }
+  fresh(){ return {tab:'sim',screen:'setup',drivers:{haz:'Neutral',coop:'Neutral',fin:'Neutral',inst:'Neutral',tech:'Neutral'},active:Object.fromEntries(ROLES.map(r=>[r.id,false])),round:0,choices:[{},{},{}],resolved:false,vals:{...START},trail:[],result:null,wild:null,wildUsed:{}}; }
   apply(v,fx){
     const s = this.props.sensitivity ?? 1, n = {...v};
     for (const k in fx){ n[k] = n[k] + Math.round(fx[k]*s); const lim = (k==='a'||k==='b')?[-R,R]:[0,100]; n[k] = Math.max(lim[0],Math.min(lim[1],n[k])); }
@@ -740,15 +890,17 @@ class Component extends DCLogic {
     const act = ROLES.filter(r=>st.active[r.id]);
     if (act.some(r=>ch[r.id]===undefined)) return;
     let v = this.apply(st.vals, Rd.base);
-    DRIVERS.forEach(d=>{ const s = PATHWAYS[st.pathway][d.id][st.round]; v = this.apply(v, DFX[d.id][s]); });
-    act.forEach(r=>{ v = this.apply(v, Rd.options[r.id][ch[r.id]].fx); });
-    const coal = Rd.coalitions.map(c=>{
+    const afterBase = v;
+    DRIVERS.forEach(d=>{ const s = this.stateOf(st, d.id, st.round); v = this.apply(v, DFX[d.id][s]); });
+    const afterDrv = v;
+    act.forEach(r=>{ v = this.apply(v, this.opts(r.id, st.round)[ch[r.id]].fx); });
+    const coal = this.coalsOf(st.round).map(c=>{
       const roles = Object.keys(c.req), missing = roles.filter(id=>!st.active[id]);
-      const ok = !missing.length && roles.every(id=>c.req[id].includes(ch[id]));
+      const ok = !missing.length && roles.every(id=>this.matches(id, st.round, ch[id], c.req[id]));
       if (ok) v = this.apply(v, c.fx);
       return {n:c.n,ok,missing,fx:c.fx};
     });
-    this.setState({vals:v,resolved:true,trail:[...st.trail,{a:st.vals.a,b:st.vals.b}],result:{before:st.vals,after:v,coal}});
+    this.setState({vals:v,resolved:true,trail:[...st.trail,{a:st.vals.a,b:st.vals.b}],result:{before:st.vals,afterBase,afterDrv,after:v,coal}});
   }
   next(){
     const st = this.state;
@@ -766,6 +918,21 @@ class Component extends DCLogic {
     for (const k in w.fx) neg[k] = -w.fx[k];
     this.setState({vals:this.apply(st.vals,neg),wild:null,wildUsed:{...st.wildUsed,[w.id]:false},trail:[...st.trail,{a:st.vals.a,b:st.vals.b}]});
   }
+  stateOf(st, id, i){
+    return DPAT[id][st.drivers[id]][i];
+  }
+  coalsOf(i){
+    return SITE === 'B' ? B_COALS[i] : ROUNDS[i].coalitions;
+  }
+  matches(roleId, i, idx, want){
+    if (SITE !== 'B') return want.includes(idx);
+    const s = this.stateOf(this.state, PRIMARY[roleId], i);
+    return want.includes(B_KEYS[roleId][s][idx]);
+  }
+  opts(roleId, i){
+    if (SITE !== 'B') return ROUNDS[i].options[roleId];
+    return B_OPTIONS[roleId][this.stateOf(this.state, PRIMARY[roleId], i)];
+  }
   renderVals(){
     const st = this.state, p = this.props;
     const showFx = !!(p.showEffects ?? false), hints = !!(p.showCoalitionHints ?? false);
@@ -778,7 +945,7 @@ class Component extends DCLogic {
     const steps = ROUNDS.map((r,i)=>{ const cur = st.screen==='play'&&i===st.round, done = st.screen==='debrief'||i<st.round||(i===st.round&&st.resolved);
       return {years:r.years,title:r.title,bg:cur?'#1c1d1a':done?'#e7e5de':'#fbfaf7',fg:cur?'#f5f4ef':'#1c1d1a'}; });
     steps.push({years:'2040',title:'Debrief',bg:st.screen==='debrief'?'#1c1d1a':'#fbfaf7',fg:st.screen==='debrief'?'#f5f4ef':'#1c1d1a'});
-    const roleCards = act.map(r=>({name:r.name,interest:r.interest,options:Rd.options[r.id].map((op,i)=>{
+    const roleCards = act.map(r=>({name:r.name,interest:r.interest,options:this.opts(r.id, st.round).map((op,i)=>{
       const sel = ch[r.id]===i, lock = st.resolved;
       return {t:op.t,d:op.d,fx:fxText(op.fx),showFx,cursor:lock?'default':'pointer',
         border:sel?'#1c1d1a':'#dcdad2',bg:sel?'#ecebe4':'#ffffff',opacity:lock&&!sel?0.45:1,
@@ -790,25 +957,42 @@ class Component extends DCLogic {
     const resultCoalitions = res ? res.coal.map(c=>({n:c.n,mark:c.ok?'●':'○',c:c.ok?'oklch(0.8 0.09 195)':'#8d8f88',note:c.ok?fxText(c.fx):c.missing.length?'not possible, role not in play':'not formed'})) : [];
     const indicators = KEYS.filter(k=>k!=='a'&&k!=='b').map(k=>{ const v = st.vals[k], d = v-START[k], good = INV[k]?d<0:d>0;
       return {n:NAMES[k],v,d:d===0?'':(d>0?'+':'−')+Math.abs(d),c:good?TEAL:CORAL,w:v,bar:INV[k]?'#8d8f88':'#1c1d1a'}; });
-    const counts = {}; ROUNDS.forEach((rd,i)=>act.forEach(r=>{ const c = st.choices[i][r.id]; if (c!==undefined){ const t = rd.options[r.id][c].tag; if (t) counts[t]=(counts[t]||0)+1; } }));
+    const counts = {}; ROUNDS.forEach((rd,i)=>act.forEach(r=>{ const c = st.choices[i][r.id]; if (c!==undefined){ const t = this.opts(r.id, i)[c].tag; if (t) counts[t]=(counts[t]||0)+1; } }));
     const W = WILD.find(w=>w.id===st.wild);
+    const drvSum = {};
+    DRIVERS.forEach(d=>{ const e = DFX[d.id][this.stateOf(st, d.id, st.round)]; for (const k in e) drvSum[k] = (drvSum[k]||0) + e[k]; });
+    const drvKeys = Object.keys(drvSum).filter(k=>drvSum[k]!==0);
+    const drvLine = drvKeys.length ? 'Drivers this period: ' + fxText(Object.fromEntries(drvKeys.map(k=>[k,drvSum[k]]))) : 'Drivers this period: none';
+    const diffTxt = (x,y) => { const parts = KEYS.filter(k=>y[k]!==x[k]).map(k=>{ const d = y[k]-x[k]; return SHORT[k]+' '+(d>0?'+':'−')+Math.abs(d); }); return parts.length ? parts.join(' · ') : 'none'; };
     return {
-      isGap:!isSim, isSetup:isSim&&st.screen==='setup', isBoard:isSim&&st.screen!=='setup',
+      roundDrvFx:drvLine, resBaseTxt:res?diffTxt(res.before,res.afterBase):'—', resDrvTxt:res?diffTxt(res.afterBase,res.afterDrv):'—', resDecTxt:res?diffTxt(res.afterDrv,res.after):'—',
+      isGap:st.tab==='gap', isDrv:st.tab==='drv', isSetup:isSim&&st.screen==='setup', isDrvSetup:isSim&&st.screen==='drivers', isBoard:isSim&&(st.screen==='play'||st.screen==='debrief'),
       isPlay:st.screen==='play', isDebrief:st.screen==='debrief',
       tabSimBg:isSim?'#1c1d1a':'transparent', tabSimFg:isSim?'#f5f4ef':'#1c1d1a',
-      tabGapBg:!isSim?'#1c1d1a':'transparent', tabGapFg:!isSim?'#f5f4ef':'#1c1d1a',
+      tabGapBg:st.tab==='gap'?'#1c1d1a':'transparent', tabGapFg:st.tab==='gap'?'#f5f4ef':'#1c1d1a',
+      tabDrvBg:st.tab==='drv'?'#1c1d1a':'transparent', tabDrvFg:st.tab==='drv'?'#f5f4ef':'#1c1d1a',
+      toDrv:()=>this.setState({tab:'drv'}),
       toSim:()=>this.setState({tab:'sim'}), toGap:()=>this.setState({tab:'gap'}),
+      drvCards:DRIVERS.map(d=>({name:d.name,role:DRV_ROLE[d.id],pos:d.desc.Likely,med:d.desc.Neutral,neg:d.desc.Unlikely})),
+      scenCards:[
+        {n:SCEN.s1.n,t:SCEN.s1.t,c:SCEN.s1.c,rule:'Both axes at or above +7.',cond:'Cooperation and institutions both Likely for most of the period.'},
+        {n:SCEN.s2.n,t:SCEN.s2.t,c:SCEN.s2.c,rule:'Anything not in the two corners. This includes the two off-diagonal corners, where the axes split.',cond:'Mixed states: one axis rises while the other stays Neutral, or the two move apart.'},
+        {n:SCEN.s3.n,t:SCEN.s3.t,c:SCEN.s3.c,rule:'Both axes at or below -7.',cond:'Cooperation and institutions both Unlikely for most of the period.'}
+      ],
       activeCount:act.length,
-      pathwayName:st.pathway,
-      pathwayOpts:['Positive','Medium','Negative'].map(k=>({label:k,bg:st.pathway===k?'#1c1d1a':'#ffffff',fg:st.pathway===k?'#f5f4ef':'#1c1d1a',pick:()=>this.setState({pathway:k})})),
-      driverCards:DRIVERS.map(d=>{ const s = PATHWAYS[st.pathway][d.id][st.round]; return {name:d.name,state:s.toUpperCase(),desc:d.desc[s],color:s==='Positive'?TEAL:s==='Negative'?CORAL:'#1c1d1a'}; }),
+      drvSetup:DRIVERS.map(d=>{ const cur = st.drivers[d.id];
+        const mk = k => ({label:k.toUpperCase(), desc:d.desc[k], color:k==='Likely'?TEAL:k==='Unlikely'?CORAL:'#1c1d1a', bg:cur===k?'#ffffff':'#f5f4ef', border:cur===k?'#1c1d1a':'#dcdad2', shadow:cur===k?'0 0 0 3px oklch(0.52 0.09 195)':'none', pick:()=>this.setState(x=>({drivers:{...x.drivers,[d.id]:k}}))});
+        return {name:d.name, role:DRV_ROLE[d.id], a:mk('Likely'), b:mk('Neutral'), c:mk('Unlikely')}; }),
+      driverCards:DRIVERS.map(d=>{ const s = this.stateOf(st, d.id, st.round); const e = DFX[d.id][s], fx = Object.keys(e).length ? 'Adds to this round: '+fxText(e) : 'No effect this round'; return {name:d.name,state:s.toUpperCase(),desc:d.desc[s],fx,color:s==='Likely'?TEAL:s==='Unlikely'?CORAL:'#1c1d1a'}; }),
       beginBg:act.length?'#1c1d1a':'#c9c7be',
       beginCursor:act.length?'pointer':'not-allowed',
       roleToggles:ROLES.map(r=>({name:r.name,desc:r.desc,state:st.active[r.id]?'IN PLAY':'OUT',border:st.active[r.id]?'#1c1d1a':'#dcdad2',bg:st.active[r.id]?'#ffffff':'#fbfaf7',shadow:st.active[r.id]?'0 0 0 3px oklch(0.52 0.09 195)':'none',
         toggle:()=>this.setState(s=>({active:{...s.active,[r.id]:!s.active[r.id]}}))})),
+      goDrivers:()=>{ if (!act.length) return; this.setState({screen:'drivers'}); },
+      backSetup:()=>this.setState({screen:'setup'}),
       start:()=>{ if (!act.length) return; this.setState({screen:'play',...this.autoWild(0,this.state)}); },
       roundSteps:steps, roundNum:st.round+1, roundYears:Rd.years, roundTitle:Rd.title, roundBrief:Rd.brief, roundBase:Rd.baseNote, roundSignposts:Rd.signposts,
-      showHints:hints, coalitionHints:Rd.coalitions.map(c=>({n:c.n,who:Object.keys(c.req).map(roleName).join(' + ')})),
+      showHints:hints, coalitionHints:this.coalsOf(st.round).map(c=>({n:c.n,who:Object.keys(c.req).map(roleName).join(' + ')})),
       roleCards, decidedCount:decided, resolved:st.resolved, notResolved:!st.resolved,
       resolveBg:ready?'#1c1d1a':'#a3a59e', resolveNote:ready?'All roles have decided.':'Waiting on '+(act.length-decided)+' role'+(act.length-decided===1?'':'s')+'.',
       resolve:()=>this.resolve(), next:()=>this.next(), nextLabel:st.round>=ROUNDS.length-1?'Go to 2040 debrief':'Begin round '+(st.round+2)+' · '+ROUNDS[Math.min(st.round+1,2)].years,
@@ -821,7 +1005,7 @@ class Component extends DCLogic {
       outName:sc.n, outText:sc.t, outColor:sc.c,
       noRegret:NOREG.map(x=>({n:x.n,t:counts[x.tag]?counts[x.tag]+'×':'not made',c:counts[x.tag]?TEAL:CORAL})),
       debriefQs:[...sc.q,'Which of the four ESB recommendations held in this run, and which depended on the scenario?','Which signposts would have warned you earliest?','Where did stakeholder interests conflict, and who gave ground?'],
-      logRows:act.map(r=>({name:r.name,picks:ROUNDS.map((rd,i)=>{ const c = st.choices[i][r.id]; return c===undefined?'—':rd.options[r.id][c].t; })})),
+      logRows:act.map(r=>({name:r.name,picks:ROUNDS.map((rd,i)=>{ const c = st.choices[i][r.id]; return c===undefined?'—':this.opts(r.id, i)[c].t; })})),
       restart:()=>this.setState({...this.fresh()})
     };
   }
