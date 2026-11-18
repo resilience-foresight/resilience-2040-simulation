@@ -297,38 +297,63 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 </style>
-<style>body{margin:0;background:#f5f4ef;color:#1c1d1a;-webkit-font-smoothing:antialiased}a{color:oklch(0.45 0.09 195)}a:hover{color:#1c1d1a}*{box-sizing:border-box}button{font-family:inherit}</style>
+<style>body{margin:0;background:#F7F9FC;color:#1F2A37;-webkit-font-smoothing:antialiased}a{color:#00857F}a:hover{color:#1F2A37}*{box-sizing:border-box}button{font-family:inherit}</style>
 </helmet>
 <div style="min-height:100vh;font-family:'IBM Plex Sans',Helvetica,sans-serif;font-size:15px;line-height:1.5">
-  <header style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding:16px 28px;border-bottom:1px solid #dcdad2;background:#fbfaf7">
+  <header style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px;padding:16px 28px;border-bottom:4px solid #009ED8;background:#FFFFFF">
     <div style="display:flex;flex-direction:column;gap:2px">
-      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5b5d57">Multi-stakeholder foresight simulation</div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#4A5A6A">Multi-stakeholder foresight simulation</div>
       <div style="font-size:18px;font-weight:600">Financing Resilience Toward 2040</div>
     </div>
-    <div style="display:flex;gap:4px;padding:4px;border:1px solid #dcdad2;border-radius:8px;background:#f5f4ef">
+    <div style="display:flex;gap:4px;padding:4px;border:1px solid #C9D6E3;border-radius:8px;background:#F7F9FC">
       <button sc-camel-on-click="{{ toSim }}" style="border:0;border-radius:6px;padding:8px 14px;font-size:14px;font-weight:500;cursor:pointer;background:{{ tabSimBg }};color:{{ tabSimFg }}">Simulation</button>
       <button sc-camel-on-click="{{ toDrv }}" style="border:0;border-radius:6px;padding:8px 14px;font-size:14px;font-weight:500;cursor:pointer;background:{{ tabDrvBg }};color:{{ tabDrvFg }}">Drivers</button>
+      <button sc-camel-on-click="{{ toAnnex }}" style="display:{{ annexDisplay }};border:0;border-radius:6px;padding:8px 14px;font-size:14px;font-weight:500;cursor:pointer;background:{{ tabAnnexBg }};color:{{ tabAnnexFg }}">Effects annex</button>
       <button sc-camel-on-click="{{ toGap }}" style="border:0;border-radius:6px;padding:8px 14px;font-size:14px;font-weight:500;cursor:pointer;background:{{ tabGapBg }};color:{{ tabGapFg }}">Paper gap analysis</button>
     </div>
   </header>
+
+  <sc-if value="{{ isAnnex }}" hint-placeholder-val="{{ false }}">
+    <main style="max-width:1200px;margin:0 auto;padding:36px 28px 64px;display:flex;flex-direction:column;gap:20px">
+      <div style="display:flex;flex-direction:column;gap:8px;max-width:760px">
+        <h1 style="margin:0;font-size:28px;font-weight:600;line-height:1.2">Effects annex</h1>
+        <p style="margin:0;color:#4A5A6A;text-wrap:pretty">Every decision option, with the driver state it belongs to and what it does to the indicators. Effects are provisional. In rounds 2 and 3, a continuation option replaces the first state option when the role made the matching move in the round before.</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1.2fr 1.3fr 0.8fr 2fr 1.6fr 1fr;gap:12px;font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#4A5A6A;border-bottom:1px solid #C9D6E3;padding-bottom:8px">
+        <span>Role</span><span>Driver</span><span>State</span><span>Option</span><span>Effects</span><span>No-regret</span>
+      </div>
+      <div style="display:flex;flex-direction:column">
+        <sc-for list="{{ annexRows }}" as="ar" hint-placeholder-count="10">
+          <div style="display:grid;grid-template-columns:1.2fr 1.3fr 0.8fr 2fr 1.6fr 1fr;gap:12px;align-items:baseline;padding:10px 0;border-bottom:1px solid #DCE5EF;font-size:13.5px;line-height:1.4">
+            <span style="font-weight:600">{{ ar.role }}</span>
+            <span style="color:#4A5A6A">{{ ar.driver }}</span>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:{{ ar.color }}">{{ ar.state }}</span>
+            <span>{{ ar.title }}</span>
+            <span style="color:#1F2A37">{{ ar.fx }}</span>
+            <span style="color:#4A5A6A">{{ ar.tag }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </main>
+  </sc-if>
 
   <sc-if value="{{ isDrv }}" hint-placeholder-val="{{ false }}">
     <main style="max-width:1200px;margin:0 auto;padding:36px 28px 64px;display:flex;flex-direction:column;gap:32px">
       <div style="display:flex;flex-direction:column;gap:8px;max-width:760px">
         <h1 style="margin:0;font-size:28px;font-weight:600;line-height:1.2">Drivers of change</h1>
-        <p style="margin:0;color:#5b5d57;text-wrap:pretty">Five drivers set the external conditions for SIDS disaster-risk financing. Each has three states. At setup, each driver gets one choice: Likely, Neutral or Unlikely. The choice sets its state in each period, and stakeholder decisions react to those states. The three 2040 scenarios come from where the two axes end up.</p>
+        <p style="margin:0;color:#4A5A6A;text-wrap:pretty">Five drivers set the external conditions for SIDS disaster-risk financing. Each has three states. At setup, each driver gets one choice: Likely, Neutral or Unlikely. The choice sets its state in each period, and stakeholder decisions react to those states. The three 2040 scenarios come from where the two axes end up.</p>
       </div>
       <section style="display:flex;flex-direction:column;gap:14px">
         <h2 style="margin:0;font-size:20px;font-weight:600">The five drivers</h2>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px">
           <sc-for list="{{ drvCards }}" as="dc" hint-placeholder-count="5">
-            <article style="border:1px solid #dcdad2;border-radius:10px;background:#fbfaf7;padding:18px;display:flex;flex-direction:column;gap:10px">
+            <article style="border:1px solid #C9D6E3;border-radius:10px;background:#FFFFFF;padding:18px;display:flex;flex-direction:column;gap:10px">
               <h3 style="margin:0;font-size:17px;font-weight:600">{{ dc.name }}</h3>
-              <p style="margin:0;font-size:13px;color:#5b5d57;line-height:1.45">{{ dc.role }}</p>
+              <p style="margin:0;font-size:13px;color:#4A5A6A;line-height:1.45">{{ dc.role }}</p>
               <div style="display:flex;flex-direction:column;gap:8px;font-size:14px;line-height:1.45">
-                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:oklch(0.45 0.09 195)">LIKELY</span><span>{{ dc.pos }}</span></div>
-                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:#5b5d57">NEUTRAL</span><span>{{ dc.med }}</span></div>
-                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:oklch(0.45 0.09 30)">UNLIKELY</span><span>{{ dc.neg }}</span></div>
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:#00857F">LIKELY</span><span>{{ dc.pos }}</span></div>
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:#4A5A6A">NEUTRAL</span><span>{{ dc.med }}</span></div>
+                <div style="display:flex;flex-direction:column;gap:2px"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:#C4561A">UNLIKELY</span><span>{{ dc.neg }}</span></div>
               </div>
             </article>
           </sc-for>
@@ -336,32 +361,52 @@
       </section>
       <section style="display:flex;flex-direction:column;gap:14px">
         <h2 style="margin:0;font-size:20px;font-weight:600">What each 2040 scenario means</h2>
-        <p style="margin:0;color:#5b5d57;max-width:820px;text-wrap:pretty">The scenario is set by the final position on the two axes. The model rule is shown for each. The driver conditions are hypotheses to test in play, not results.</p>
+        <p style="margin:0;color:#4A5A6A;max-width:820px;text-wrap:pretty">The scenario is set by the final position on the two axes. The model rule is shown for each. The driver conditions are hypotheses to test in play, not results.</p>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px">
           <sc-for list="{{ scenCards }}" as="sc" hint-placeholder-count="3">
-            <article style="border:1px solid #dcdad2;border-left:6px solid {{ sc.c }};border-radius:10px;background:#fbfaf7;padding:18px;display:flex;flex-direction:column;gap:10px">
+            <article style="border:1px solid #C9D6E3;border-left:6px solid {{ sc.c }};border-radius:10px;background:#FFFFFF;padding:18px;display:flex;flex-direction:column;gap:10px">
               <h3 style="margin:0;font-size:17px;font-weight:600">{{ sc.n }}</h3>
               <p style="margin:0;font-size:14px;line-height:1.5">{{ sc.t }}</p>
-              <p style="margin:0;font-size:13px;color:#5b5d57;line-height:1.45"><strong style="color:#1c1d1a;font-weight:600">Model rule.</strong> {{ sc.rule }}</p>
-              <p style="margin:0;font-size:13px;color:#5b5d57;line-height:1.45"><strong style="color:#1c1d1a;font-weight:600">Driver conditions (hypothesis).</strong> {{ sc.cond }}</p>
+              <p style="margin:0;font-size:13px;color:#4A5A6A;line-height:1.45"><strong style="color:#1F2A37;font-weight:600">Model rule.</strong> {{ sc.rule }}</p>
+              <p style="margin:0;font-size:13px;color:#4A5A6A;line-height:1.45"><strong style="color:#1F2A37;font-weight:600">Driver conditions (hypothesis).</strong> {{ sc.cond }}</p>
             </article>
           </sc-for>
         </div>
       </section>
       <section style="display:flex;flex-direction:column;gap:14px">
         <h2 style="margin:0;font-size:20px;font-weight:600">What each choice does over time</h2>
-        <p style="margin:0;color:#5b5d57;max-width:820px;text-wrap:pretty">At setup, the facilitator sets one choice per driver. Each row shows how that choice plays out in the periods 2026–2029, 2030–2034 and 2035–2040.</p>
+        <p style="margin:0;color:#4A5A6A;max-width:820px;text-wrap:pretty">At setup, the facilitator sets one choice per driver. Each row shows how that choice plays out in the periods 2026–2029, 2030–2034 and 2035–2040.</p>
         <div style="overflow-x:auto">
-          <table style="width:100%;border-collapse:collapse;font-size:14px;background:#fbfaf7">
-            <thead><tr style="text-align:left;border-bottom:1px solid #dcdad2"><th style="padding:10px 12px;font-weight:600">Choice</th><th style="padding:10px 12px;font-weight:600">What moves</th></tr></thead>
+          <table style="width:100%;border-collapse:collapse;font-size:14px;background:#FFFFFF">
+            <thead><tr style="text-align:left;border-bottom:1px solid #C9D6E3"><th style="padding:10px 12px;font-weight:600">Choice</th><th style="padding:10px 12px;font-weight:600">What moves</th></tr></thead>
             <tbody>
-              <tr style="border-bottom:1px solid #e7e5de"><td style="padding:10px 12px;vertical-align:top;font-weight:600">Likely</td><td style="padding:10px 12px">Moves to Likely in 2030–2034 and stays there. Hazard has no change, because sea-level rise is already locked in.</td></tr>
-              <tr style="border-bottom:1px solid #e7e5de"><td style="padding:10px 12px;vertical-align:top;font-weight:600">Neutral</td><td style="padding:10px 12px">Stays Neutral in every period. This is today's trend.</td></tr>
-              <tr style="border-bottom:1px solid #e7e5de"><td style="padding:10px 12px;vertical-align:top;font-weight:600">Unlikely</td><td style="padding:10px 12px">Moves to Unlikely in 2030–2034 and stays there. Hazard moves to Unlikely only in 2035–2040.</td></tr>
+              <tr style="border-bottom:1px solid #DCE5EF"><td style="padding:10px 12px;vertical-align:top;font-weight:600">Likely</td><td style="padding:10px 12px">Moves to Likely in 2030–2034 and stays there. Hazard has no change, because sea-level rise is already locked in.</td></tr>
+              <tr style="border-bottom:1px solid #DCE5EF"><td style="padding:10px 12px;vertical-align:top;font-weight:600">Neutral</td><td style="padding:10px 12px">Stays Neutral in every period. This is today's trend.</td></tr>
+              <tr style="border-bottom:1px solid #DCE5EF"><td style="padding:10px 12px;vertical-align:top;font-weight:600">Unlikely</td><td style="padding:10px 12px">Moves to Unlikely in 2030–2034 and stays there. Hazard moves to Unlikely only in 2035–2040.</td></tr>
             </tbody>
           </table>
         </div>
-        <p style="margin:0;font-size:13px;color:#5b5d57;max-width:820px;text-wrap:pretty">States: Likely is the favourable trajectory for SIDS, Neutral is today's trend, and Unlikely is the adverse trajectory. Each card states the direction for SIDS, so no card needs a separate High or Low label.</p>
+        <p style="margin:0;font-size:13px;color:#4A5A6A;max-width:820px;text-wrap:pretty">States: Likely is the favourable trajectory for SIDS, Neutral is today's trend, and Unlikely is the adverse trajectory. Each card states the direction for SIDS, so no card needs a separate High or Low label.</p>
+      </section>
+    <section style="display:flex;flex-direction:column;gap:14px">
+        <h2 style="margin:0;font-size:20px;font-weight:600">Signposts to watch</h2>
+        <p style="margin:0;color:#4A5A6A;max-width:820px;text-wrap:pretty">Each round names three signposts. Each one has an indicator and a source. Thresholds are placeholders for the team to set, except where the evidence brief gives a reference.</p>
+        <div style="overflow-x:auto">
+          <table style="width:100%;border-collapse:collapse;font-size:14px;background:#FFFFFF">
+            <thead><tr style="text-align:left;border-bottom:1px solid #C9D6E3"><th style="padding:10px 12px;font-weight:600">Round</th><th style="padding:10px 12px;font-weight:600">Signpost</th><th style="padding:10px 12px;font-weight:600">Indicator</th><th style="padding:10px 12px;font-weight:600">Source</th><th style="padding:10px 12px;font-weight:600">Threshold</th></tr></thead>
+            <tbody>
+              <tr style="border-bottom:1px solid #DCE5EF"><td style="padding:10px 12px">2026–2029</td><td style="padding:10px 12px">Share of disaster finance arranged before shocks</td><td style="padding:10px 12px">Pre-arranged share of crisis finance</td><td style="padding:10px 12px">Centre for Disaster Protection; Evidence brief</td><td style="padding:10px 12px">Above 2% (2022 baseline in the brief)</td></tr>
+              <tr style="border-bottom:1px solid #DCE5EF"><td style="padding:10px 12px">2026–2029</td><td style="padding:10px 12px">SIDS holding their own exposure data</td><td style="padding:10px 12px">Share of trigger data held by national institutions</td><td style="padding:10px 12px">National met services; Evidence brief</td><td style="padding:10px 12px">Placeholder: set with the team</td></tr>
+              <tr style="border-bottom:1px solid #DCE5EF"><td style="padding:10px 12px">2026–2029</td><td style="padding:10px 12px">Southern funders' commitments to SIDS risk finance</td><td style="padding:10px 12px">Southern commitments to SIDS risk finance</td><td style="padding:10px 12px">UNOSSC South-South Galaxy</td><td style="padding:10px 12px">Placeholder: set with the team</td></tr>
+              <tr style="border-bottom:1px solid #DCE5EF"><td style="padding:10px 12px">2030–2034</td><td style="padding:10px 12px">Debt service as share of SIDS revenue</td><td style="padding:10px 12px">Debt service as share of revenue</td><td style="padding:10px 12px">IMF; national budgets</td><td style="padding:10px 12px">Placeholder: set with the team</td></tr>
+              <tr style="border-bottom:1px solid #DCE5EF"><td style="padding:10px 12px">2030–2034</td><td style="padding:10px 12px">Premium trends for micro-states</td><td style="padding:10px 12px">Premium per unit of cover for small states</td><td style="padding:10px 12px">CCRIF and PCRIC reports</td><td style="padding:10px 12px">Placeholder: set with the team</td></tr>
+              <tr style="border-bottom:1px solid #DCE5EF"><td style="padding:10px 12px">2030–2034</td><td style="padding:10px 12px">Loss and Damage Fund disbursement speed</td><td style="padding:10px 12px">Days from request to disbursement</td><td style="padding:10px 12px">Fund for Responding to Loss and Damage Board</td><td style="padding:10px 12px">Placeholder: set with the team</td></tr>
+              <tr style="border-bottom:1px solid #DCE5EF"><td style="padding:10px 12px">2035–2040</td><td style="padding:10px 12px">Coverage of slow-onset hazards</td><td style="padding:10px 12px">Share of slow-onset losses covered by pre-arranged finance</td><td style="padding:10px 12px">Pool product lists; Centre for Disaster Protection</td><td style="padding:10px 12px">Placeholder: set with the team</td></tr>
+              <tr style="border-bottom:1px solid #DCE5EF"><td style="padding:10px 12px">2035–2040</td><td style="padding:10px 12px">Payout time to households</td><td style="padding:10px 12px">Days from trigger to household receipt</td><td style="padding:10px 12px">PICAP reports</td><td style="padding:10px 12px">Two weeks (Fiji, 2023, as the reference)</td></tr>
+              <tr style="border-bottom:1px solid #DCE5EF"><td style="padding:10px 12px">2035–2040</td><td style="padding:10px 12px">Institutional continuity plans for at-risk states</td><td style="padding:10px 12px">At-risk states with a continuity plan</td><td style="padding:10px 12px">National plans; UN-OHRLLS</td><td style="padding:10px 12px">Placeholder: set with the team</td></tr>
+            </tbody>
+          </table>
+        </div>
       </section>
     </main>
   </sc-if>
@@ -370,11 +415,11 @@
     <main style="max-width:1200px;margin:0 auto;padding:36px 28px 64px;display:flex;flex-direction:column;gap:28px">
       <div style="display:flex;flex-direction:column;gap:8px;max-width:760px">
         <h1 style="margin:0;font-size:28px;font-weight:600;line-height:1.2">What the paper needs before it can run as a simulation</h1>
-        <p style="margin:0;color:#5b5d57;text-wrap:pretty">Review of the revised skeleton, read against what a facilitated multi-stakeholder exercise needs. Items marked “stand-in” are placeholders built into this prototype that the team should replace with its own content.</p>
+        <p style="margin:0;color:#4A5A6A;text-wrap:pretty">Review of the revised skeleton, read against what a facilitated multi-stakeholder exercise needs. Items marked “stand-in” are placeholders built into this prototype that the team should replace with its own content.</p>
       </div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;align-items:start">
-        <section style="background:#fbfaf7;border:1px solid #dcdad2;border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:16px">
-          <div style="display:flex;align-items:baseline;justify-content:space-between"><h2 style="margin:0;font-size:18px;font-weight:600">Missing</h2><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5b5d57">10</span></div>
+        <section style="background:#FFFFFF;border:1px solid #C9D6E3;border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between"><h2 style="margin:0;font-size:18px;font-weight:600">Missing</h2><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#4A5A6A">10</span></div>
           <ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:12px;text-wrap:pretty">
             <li><strong>The fourth quadrant.</strong> Two axes make four futures. The paper describes the two diagonal corners plus a “mixed” middle, so high cooperation + externally driven and low cooperation + SIDS-led are undefined. The second is arguably the most relevant future for SSTrC. The prototype now folds both into Fragmented Patchwork, so the model has three scenarios. The team should decide whether the second one deserves its own scenario.</li>
             <li><strong>Written decision points.</strong> The paper says decision points become participant choices, but none are specified. Each needs an actor, a time window, two or three options and a stated trade-off. The 81 options here are stand-ins.</li>
@@ -388,8 +433,8 @@
             <li><strong>Wildcard mechanics.</strong> The wildcards are named but not timed, scaled or linked to what changes for each actor.</li>
           </ol>
         </section>
-        <section style="background:#fbfaf7;border:1px solid #dcdad2;border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:16px">
-          <div style="display:flex;align-items:baseline;justify-content:space-between"><h2 style="margin:0;font-size:18px;font-weight:600">Needs improvement</h2><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5b5d57">8</span></div>
+        <section style="background:#FFFFFF;border:1px solid #C9D6E3;border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between"><h2 style="margin:0;font-size:18px;font-weight:600">Needs improvement</h2><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#4A5A6A">8</span></div>
           <ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:12px;text-wrap:pretty">
             <li><strong>Define the MVI.</strong> Scenario 1 leaves open whether the MVI shapes eligibility, concessional terms or distribution. Pick one; the simulation currently assumes concessional terms.</li>
             <li><strong>Place Scenario 2 on the axes.</strong> “Mixed, muddling through” has no coordinates. State where it sits, or replace it with the missing quadrants.</li>
@@ -401,8 +446,8 @@
             <li><strong>Add validation to the method.</strong> A small-team adaptation can be strengthened by playtesting with two or three interviewees before the full session.</li>
           </ol>
         </section>
-        <section style="background:#fbfaf7;border:1px solid #dcdad2;border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:16px">
-          <div style="display:flex;align-items:baseline;justify-content:space-between"><h2 style="margin:0;font-size:18px;font-weight:600">To add</h2><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5b5d57">8</span></div>
+        <section style="background:#FFFFFF;border:1px solid #C9D6E3;border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:16px">
+          <div style="display:flex;align-items:baseline;justify-content:space-between"><h2 style="margin:0;font-size:18px;font-weight:600">To add</h2><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#4A5A6A">8</span></div>
           <ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:12px;text-wrap:pretty">
             <li><strong>Facilitator guide.</strong> Timings, rules, how to run negotiation between rounds, when to inject wildcards and how to debrief.</li>
             <li><strong>Printable role cards.</strong> One page per actor: mandate, interests, resources, red lines, decision options.</li>
@@ -423,35 +468,35 @@
       <div style="display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start">
         <div style="flex:1 1 420px;display:flex;flex-direction:column;gap:14px;max-width:640px">
           <h1 style="margin:0;font-size:32px;font-weight:600;line-height:1.15;text-wrap:pretty">How can SSTrC help SIDS access, adapt and scale pre-arranged disaster-risk financing toward 2040?</h1>
-          <p style="margin:0;color:#5b5d57;text-wrap:pretty">Stakeholders make decisions across three periods. Their choices move two critical uncertainties, international cooperation and SIDS agency, and the end position determines which 2040 scenario arrives. UNOSSC convenes; it is not the only decision-maker.</p>
+          <p style="margin:0;color:#4A5A6A;text-wrap:pretty">Stakeholders make decisions across three periods. Their choices move two critical uncertainties, international cooperation and SIDS agency, and the end position determines which 2040 scenario arrives. UNOSSC convenes; it is not the only decision-maker.</p>
         </div>
-        <div style="flex:1 1 320px;display:flex;flex-direction:column;gap:10px;background:#fbfaf7;border:1px solid #dcdad2;border-radius:10px;padding:20px">
-          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5b5d57">Each round</div>
+        <div style="flex:1 1 320px;display:flex;flex-direction:column;gap:10px;background:#FFFFFF;border:1px solid #C9D6E3;border-radius:10px;padding:20px">
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#4A5A6A">Each round</div>
           <div style="display:grid;grid-template-columns:28px 1fr;gap:8px 10px">
-            <span style="font-family:'IBM Plex Mono',monospace;color:#5b5d57">01</span><span>Facilitator reads the briefing and signposts.</span>
-            <span style="font-family:'IBM Plex Mono',monospace;color:#5b5d57">02</span><span>Stakeholders negotiate. Some decisions only pay off when made together.</span>
-            <span style="font-family:'IBM Plex Mono',monospace;color:#5b5d57">03</span><span>Each role commits one decision.</span>
-            <span style="font-family:'IBM Plex Mono',monospace;color:#5b5d57">04</span><span>Resolve: see how the axes and indicators move. Wildcards can land at any time.</span>
+            <span style="font-family:'IBM Plex Mono',monospace;color:#4A5A6A">01</span><span>Facilitator reads the briefing and signposts.</span>
+            <span style="font-family:'IBM Plex Mono',monospace;color:#4A5A6A">02</span><span>Stakeholders negotiate. Some decisions only pay off when made together.</span>
+            <span style="font-family:'IBM Plex Mono',monospace;color:#4A5A6A">03</span><span>Each role commits one decision.</span>
+            <span style="font-family:'IBM Plex Mono',monospace;color:#4A5A6A">04</span><span>Resolve: see how the axes and indicators move. Wildcards can land at any time.</span>
           </div>
         </div>
       </div>
       <div style="display:flex;flex-direction:column;gap:14px">
         <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px">
           <h2 style="margin:0;font-size:18px;font-weight:600">Roles in play</h2>
-          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5b5d57">{{ activeCount }} of 9 selected · click to toggle</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#4A5A6A">{{ activeCount }} of 9 selected · click to toggle</span>
         </div>
         <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">
           <sc-for list="{{ roleToggles }}" as="rt" hint-placeholder-count="9">
-            <button sc-camel-on-click="{{ rt.toggle }}" style="text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:6px;padding:16px;border-radius:10px;border:1px solid {{ rt.border }};background:{{ rt.bg }};box-shadow:{{ rt.shadow }};color:#1c1d1a">
-              <span style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span style="font-weight:600;font-size:15px">{{ rt.name }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#1c1d1a">{{ rt.state }}</span></span>
-              <span style="font-size:13px;color:#5b5d57;line-height:1.45">{{ rt.desc }}</span>
+            <button sc-camel-on-click="{{ rt.toggle }}" style="text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:6px;padding:16px;border-radius:10px;border:1px solid {{ rt.border }};background:{{ rt.bg }};box-shadow:{{ rt.shadow }};color:#1F2A37">
+              <span style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span style="font-weight:600;font-size:15px">{{ rt.name }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#1F2A37">{{ rt.state }}</span></span>
+              <span style="font-size:13px;color:#4A5A6A;line-height:1.45">{{ rt.desc }}</span>
             </button>
           </sc-for>
         </div>
       </div>
                   <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-        <button sc-camel-on-click="{{ goDrivers }}" style="border:0;border-radius:8px;padding:14px 22px;font-size:15px;font-weight:600;cursor:{{ beginCursor }};background:{{ beginBg }};color:#f5f4ef">Next · choose drivers</button>
-        <span style="font-size:13px;color:#5b5d57">Choose the roles in play, then set the drivers of change.</span>
+        <button sc-camel-on-click="{{ goDrivers }}" style="border:0;border-radius:8px;padding:14px 22px;font-size:15px;font-weight:600;cursor:{{ beginCursor }};background:{{ beginBg }};color:#F4F6F9">Next · choose drivers</button>
+        <span style="font-size:13px;color:#4A5A6A">Choose the roles in play, then set the drivers of change.</span>
       </div>
     </main>
   </sc-if>
@@ -460,26 +505,26 @@
     <main style="max-width:1200px;margin:0 auto;padding:36px 28px 64px;display:flex;flex-direction:column;gap:28px">
       <div style="display:flex;flex-direction:column;gap:8px;max-width:760px">
         <h1 style="margin:0;font-size:28px;font-weight:600;line-height:1.2">Drivers of change</h1>
-        <p style="margin:0;color:#5b5d57;text-wrap:pretty">Set one state per driver before round 1. The choice sets how each driver moves in the three periods, and the stakeholders react to it.</p>
+        <p style="margin:0;color:#4A5A6A;text-wrap:pretty">Set one state per driver before round 1. The choice sets how each driver moves in the three periods, and the stakeholders react to it.</p>
       </div>
 <div style="display:flex;flex-direction:column;gap:14px">
-        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap"><h2 style="margin:0;font-size:18px;font-weight:600">Drivers of change</h2><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5b5d57">Set one state per driver · the facilitator decides</span></div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;flex-wrap:wrap"><h2 style="margin:0;font-size:18px;font-weight:600">Drivers of change</h2><span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#4A5A6A">Set one state per driver · the facilitator decides</span></div>
         <sc-for list="{{ drvSetup }}" as="ds" hint-placeholder-count="5">
-          <div style="border:1px solid #dcdad2;border-radius:10px;background:#fbfaf7;padding:14px;display:flex;flex-direction:column;gap:10px">
-            <div style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600;font-size:15px">{{ ds.name }}</span><span style="font-size:12px;color:#5b5d57">{{ ds.role }}</span></div>
+          <div style="border:1px solid #C9D6E3;border-radius:10px;background:#FFFFFF;padding:14px;display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600;font-size:15px">{{ ds.name }}</span><span style="font-size:12px;color:#4A5A6A">{{ ds.role }}</span></div>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px">
-              <button sc-camel-on-click="{{ ds.a.pick }}" style="text-align:left;cursor:pointer;border:1px solid {{ ds.a.border }};background:{{ ds.a.bg }};box-shadow:{{ ds.a.shadow }};border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;color:#1c1d1a"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:{{ ds.a.color }}">{{ ds.a.label }}</span><span style="font-size:13px;line-height:1.4">{{ ds.a.desc }}</span></button>
-              <button sc-camel-on-click="{{ ds.b.pick }}" style="text-align:left;cursor:pointer;border:1px solid {{ ds.b.border }};background:{{ ds.b.bg }};box-shadow:{{ ds.b.shadow }};border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;color:#1c1d1a"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:{{ ds.b.color }}">{{ ds.b.label }}</span><span style="font-size:13px;line-height:1.4">{{ ds.b.desc }}</span></button>
-              <button sc-camel-on-click="{{ ds.c.pick }}" style="text-align:left;cursor:pointer;border:1px solid {{ ds.c.border }};background:{{ ds.c.bg }};box-shadow:{{ ds.c.shadow }};border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;color:#1c1d1a"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:{{ ds.c.color }}">{{ ds.c.label }}</span><span style="font-size:13px;line-height:1.4">{{ ds.c.desc }}</span></button>
+              <button sc-camel-on-click="{{ ds.a.pick }}" style="text-align:left;cursor:pointer;border:1px solid {{ ds.a.border }};background:{{ ds.a.bg }};box-shadow:{{ ds.a.shadow }};border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;color:#1F2A37"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:{{ ds.a.color }}">{{ ds.a.label }}</span><span style="font-size:13px;line-height:1.4">{{ ds.a.desc }}</span></button>
+              <button sc-camel-on-click="{{ ds.b.pick }}" style="text-align:left;cursor:pointer;border:1px solid {{ ds.b.border }};background:{{ ds.b.bg }};box-shadow:{{ ds.b.shadow }};border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;color:#1F2A37"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:{{ ds.b.color }}">{{ ds.b.label }}</span><span style="font-size:13px;line-height:1.4">{{ ds.b.desc }}</span></button>
+              <button sc-camel-on-click="{{ ds.c.pick }}" style="text-align:left;cursor:pointer;border:1px solid {{ ds.c.border }};background:{{ ds.c.bg }};box-shadow:{{ ds.c.shadow }};border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;color:#1F2A37"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;color:{{ ds.c.color }}">{{ ds.c.label }}</span><span style="font-size:13px;line-height:1.4">{{ ds.c.desc }}</span></button>
             </div>
           </div>
         </sc-for>
       </div>
 
       <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-        <button sc-camel-on-click="{{ backSetup }}" style="border:1px solid #1c1d1a;background:transparent;border-radius:8px;padding:14px 22px;font-size:15px;font-weight:600;cursor:pointer;color:#1c1d1a">Back to roles</button>
-        <button sc-camel-on-click="{{ start }}" style="border:0;border-radius:8px;padding:14px 22px;font-size:15px;font-weight:600;cursor:pointer;background:#1c1d1a;color:#f5f4ef">Begin round 1 · 2026–2029</button>
-        <span style="font-size:13px;color:#5b5d57">Run on one shared screen. The facilitator records each role’s decision.</span>
+        <button sc-camel-on-click="{{ backSetup }}" style="border:1px solid #00335B;background:transparent;border-radius:8px;padding:14px 22px;font-size:15px;font-weight:600;cursor:pointer;color:#1F2A37">Back to roles</button>
+        <button sc-camel-on-click="{{ start }}" style="border:0;border-radius:8px;padding:14px 22px;font-size:15px;font-weight:600;cursor:pointer;background:#00335B;color:#F4F6F9">Begin round 1 · 2026–2029</button>
+        <span style="font-size:13px;color:#4A5A6A">Run on one shared screen. The facilitator records each role’s decision.</span>
       </div>
     </main>
   </sc-if>
@@ -489,7 +534,7 @@
       <div style="flex:999 1 620px;min-width:0;display:flex;flex-direction:column;gap:20px">
         <div style="display:flex;gap:8px;flex-wrap:wrap">
           <sc-for list="{{ roundSteps }}" as="st" hint-placeholder-count="4">
-            <div style="flex:1 1 140px;display:flex;flex-direction:column;gap:2px;padding:10px 14px;border-radius:8px;border:1px solid #dcdad2;background:{{ st.bg }};color:{{ st.fg }}">
+            <div style="flex:1 1 140px;display:flex;flex-direction:column;gap:2px;padding:10px 14px;border-radius:8px;border:1px solid #C9D6E3;background:{{ st.bg }};color:{{ st.fg }}">
               <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em">{{ st.years }}</span>
               <span style="font-size:13px;font-weight:500">{{ st.title }}</span>
             </div>
@@ -497,98 +542,103 @@
         </div>
 
         <sc-if value="{{ showWild }}" hint-placeholder-val="{{ false }}">
-          <div style="border:1px solid oklch(0.52 0.09 30);background:#fbf3ef;border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:10px">
+          <div style="border:1px solid #F58220;background:#fbf3ef;border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:10px">
             <div style="display:flex;justify-content:space-between;gap:12px;align-items:baseline;flex-wrap:wrap">
-              <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:oklch(0.45 0.09 30)">Wildcard injected</span>
-              <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5b5d57">{{ wildFx }}</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#C4561A">Wildcard injected</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#4A5A6A">{{ wildFx }}</span>
             </div>
             <div style="font-size:20px;font-weight:600">{{ wildName }}</div>
             <div style="color:#3d3f3a;text-wrap:pretty">{{ wildText }}</div>
             <ul style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:4px">
               <sc-for list="{{ wildPrompts }}" as="wp" hint-placeholder-count="3"><li>{{ wp }}</li></sc-for>
             </ul>
-            <div><button sc-camel-on-click="{{ closeWild }}" style="border:1px solid #1c1d1a;background:transparent;border-radius:6px;padding:8px 14px;font-size:13px;font-weight:500;cursor:pointer">Back to the round</button></div>
+            <div><button sc-camel-on-click="{{ closeWild }}" style="border:1px solid #00335B;background:transparent;border-radius:6px;padding:8px 14px;font-size:13px;font-weight:500;cursor:pointer">Back to the round</button></div>
           </div>
         </sc-if>
 
         <sc-if value="{{ isPlay }}" hint-placeholder-val="{{ false }}">
           <div style="display:flex;flex-direction:column;gap:20px">
-            <section style="background:#fbfaf7;border:1px solid #dcdad2;border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:12px">
-              <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5b5d57">Round {{ roundNum }} briefing · {{ roundYears }}</div>
+            <section style="background:#FFFFFF;border:1px solid #C9D6E3;border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:12px">
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#4A5A6A">Round {{ roundNum }} briefing · {{ roundYears }}</div>
               <h2 style="margin:0;font-size:24px;font-weight:600;line-height:1.2">{{ roundTitle }}</h2>
               <p style="margin:0;max-width:820px;text-wrap:pretty">{{ roundBrief }}</p>
               <div style="display:flex;flex-direction:column;gap:8px">
-                <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#5b5d57">Drivers this period</span>
+                <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#4A5A6A">Drivers this period</span>
                 <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px">
-                  <sc-for list="{{ driverCards }}" as="dc" hint-placeholder-count="5"><div style="border:1px solid #dcdad2;border-radius:8px;padding:12px;background:#ffffff;display:flex;flex-direction:column;gap:6px"><span style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span style="font-weight:600;font-size:14px">{{ dc.name }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:{{ dc.color }}">{{ dc.state }}</span></span><span style="font-size:13px;color:#5b5d57;line-height:1.45">{{ dc.desc }}</span><span style="font-size:12px;font-weight:600;color:#1c1d1a;line-height:1.45">{{ dc.fx }}</span></div></sc-for>
+                  <sc-for list="{{ driverCards }}" as="dc" hint-placeholder-count="5"><div style="border:1px solid #C9D6E3;border-radius:8px;padding:12px;background:#ffffff;display:flex;flex-direction:column;gap:6px"><span style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span style="font-weight:600;font-size:14px">{{ dc.name }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:{{ dc.color }}">{{ dc.state }}</span></span><span style="font-size:13px;color:#4A5A6A;line-height:1.45">{{ dc.desc }}</span><span style="font-size:12px;font-weight:600;color:#1F2A37;line-height:1.45">{{ dc.fx }}</span></div></sc-for>
                 </div>
               </div>
               <div style="display:flex;flex-wrap:wrap;gap:20px;padding-top:4px">
                 <div style="display:flex;flex-direction:column;gap:4px;flex:1 1 240px">
-                  <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#5b5d57">Background trend this period</span>
-                  <span style="font-size:14px">{{ roundBase }}</span><span style="font-size:14px;font-weight:600;color:#1c1d1a">{{ roundDrvFx }}</span>
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#4A5A6A">Background trend this period</span>
+                  <span style="font-size:14px">{{ roundBase }}</span><span style="font-size:14px;font-weight:600;color:#1F2A37">{{ roundDrvFx }}</span><span style="font-size:14px;color:#1F2A37">{{ reactLine }}</span><span style="font-size:14px;color:#1F2A37">{{ signalLine }}</span><span style="font-size:13px;color:#4A5A6A;line-height:1.45">{{ milestoneLine }}</span>
                 </div>
                 <div style="display:flex;flex-direction:column;gap:4px;flex:2 1 320px">
-                  <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#5b5d57">Signposts to watch</span>
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#4A5A6A">Signposts to watch</span>
                   <div style="display:flex;flex-wrap:wrap;gap:6px">
-                    <sc-for list="{{ roundSignposts }}" as="sp" hint-placeholder-count="3"><span style="font-size:13px;padding:3px 10px;border:1px solid #dcdad2;border-radius:99px;background:#f5f4ef">{{ sp }}</span></sc-for>
+                    <sc-for list="{{ roundSignposts }}" as="sp" hint-placeholder-count="3"><span style="font-size:13px;padding:3px 10px;border:1px solid #C9D6E3;border-radius:99px;background:#F7F9FC">{{ sp }}</span></sc-for>
                   </div>
                 </div>
               </div>
               <sc-if value="{{ showHints }}" hint-placeholder-val="{{ false }}">
-                <div style="display:flex;flex-direction:column;gap:4px;border-top:1px solid #dcdad2;padding-top:12px">
-                  <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#5b5d57">Linked decisions available this round</span>
+                <div style="display:flex;flex-direction:column;gap:4px;border-top:1px solid #C9D6E3;padding-top:12px">
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#4A5A6A">Linked decisions available this round</span>
                   <sc-for list="{{ coalitionHints }}" as="ch" hint-placeholder-count="3"><span style="font-size:14px"><strong style="font-weight:600">{{ ch.n }}</strong> · {{ ch.who }}</span></sc-for>
                 </div>
               </sc-if>
             </section>
 
             <sc-if value="{{ resolved }}" hint-placeholder-val="{{ false }}">
-              <section style="background:#1c1d1a;color:#f5f4ef;border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:16px">
+              <section style="background:#00335B;color:#F4F6F9;border-radius:10px;padding:22px;display:flex;flex-direction:column;gap:16px">
                 <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline">
-                  <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#b9bab3">Round {{ roundNum }} result</span>
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#A9BCD0">Round {{ roundNum }} result</span>
                   <span style="font-size:14px">Trending toward <strong style="font-weight:600">{{ trendName }}</strong></span>
                 </div>
-                <div style="display:flex;flex-direction:column;gap:4px;font-size:14px;color:#d6d7d0">
+                <div style="display:flex;flex-direction:column;gap:4px;font-size:14px;color:#D5E0EA">
                   <span>Background trend: {{ resBaseTxt }}</span>
                   <span>From drivers: {{ resDrvTxt }}</span>
                   <span>From decisions and coalitions: {{ resDecTxt }}</span>
                 </div>
                 <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px">
                   <sc-for list="{{ resultDeltas }}" as="rd" hint-placeholder-count="9">
-                    <div style="display:flex;flex-direction:column;gap:2px;padding:10px 12px;border:1px solid #3a3c37;border-radius:8px">
-                      <span style="font-size:12px;color:#b9bab3">{{ rd.n }}</span>
+                    <div style="display:flex;flex-direction:column;gap:2px;padding:10px 12px;border:1px solid #2A4A66;border-radius:8px">
+                      <span style="font-size:12px;color:#A9BCD0">{{ rd.n }}</span>
                       <span style="font-family:'IBM Plex Mono',monospace;font-size:18px;color:{{ rd.c }}">{{ rd.t }}</span>
                     </div>
                   </sc-for>
                 </div>
                 <div style="display:flex;flex-direction:column;gap:6px">
-                  <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#b9bab3">Linked decisions</span>
+                  <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#A9BCD0">Linked decisions</span>
                   <sc-for list="{{ resultCoalitions }}" as="rc" hint-placeholder-count="2">
-                    <span style="font-size:14px"><span style="color:{{ rc.c }}">{{ rc.mark }}</span> <strong style="font-weight:600">{{ rc.n }}</strong> <span style="color:#b9bab3">· {{ rc.note }}</span></span>
+                    <span style="font-size:14px"><span style="color:{{ rc.c }}">{{ rc.mark }}</span> <strong style="font-weight:600">{{ rc.n }}</strong> <span style="color:#A9BCD0">· {{ rc.note }}</span></span>
                   </sc-for>
                 </div>
-                <div><button sc-camel-on-click="{{ next }}" style="border:0;border-radius:8px;padding:12px 20px;font-size:15px;font-weight:600;cursor:pointer;background:#f5f4ef;color:#1c1d1a">{{ nextLabel }}</button></div>
+                <div><button sc-camel-on-click="{{ next }}" style="border:0;border-radius:8px;padding:12px 20px;font-size:15px;font-weight:600;cursor:pointer;background:#F7F9FC;color:#1F2A37">{{ nextLabel }}</button></div>
               </section>
             </sc-if>
 
             <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap">
               <h3 style="margin:0;font-size:18px;font-weight:600">Stakeholder decisions</h3>
-              <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#5b5d57">{{ decidedCount }} of {{ activeCount }} decided</span>
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:#4A5A6A">{{ decidedCount }} of {{ activeCount }} decided</span>
             </div>
+            <p style="margin:0;font-size:13px;color:#4A5A6A;line-height:1.45;max-width:820px">Pick one option for each role. Each role's options depend on the state of its main driver this round, shown on its card. Choices show as you pick them. Effects are applied when you resolve the round.</p>
             <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px">
               <sc-for list="{{ roleCards }}" as="rc" hint-placeholder-count="9">
-                <div style="background:#fbfaf7;border:1px solid #dcdad2;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px">
+                <div style="background:#FFFFFF;border:1px solid #C9D6E3;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:10px">
                   <div style="display:flex;flex-direction:column;gap:3px">
                     <span style="font-weight:600;font-size:15px">{{ rc.name }}</span>
-                    <span style="font-size:12.5px;color:#5b5d57;line-height:1.4">Interest: {{ rc.interest }}</span>
+                    <span style="font-size:12.5px;color:#4A5A6A;line-height:1.4">Interest: {{ rc.interest }}</span><span style="font-size:12.5px;color:#4A5A6A;line-height:1.4">{{ rc.lim }}</span>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:6px;background:#F7F9FC;border:1px solid #DCE5EF;border-radius:8px;padding:10px 12px">
+                    <span style="font-size:12px;color:#4A5A6A;line-height:1.4">{{ rc.ctx }}</span>
+                    <span style="font-size:14px;font-weight:600;color:#1F2A37;line-height:1.4">{{ rc.q }}</span><span style="font-size:12.5px;color:#1F2A37;line-height:1.4">{{ rc.dp }}</span><span style="font-size:12.5px;color:#1F2A37;line-height:1.4">{{ rc.link }}</span>
                   </div>
                   <div style="display:flex;flex-direction:column;gap:6px">
                     <sc-for list="{{ rc.options }}" as="op" hint-placeholder-count="3">
-                      <button sc-camel-on-click="{{ op.pick }}" style="text-align:left;cursor:{{ op.cursor }};display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-radius:8px;border:1px solid {{ op.border }};background:{{ op.bg }};opacity:{{ op.opacity }};color:#1c1d1a">
+                      <button sc-camel-on-click="{{ op.pick }}" style="text-align:left;cursor:{{ op.cursor }};display:flex;flex-direction:column;gap:3px;padding:10px 12px;border-radius:8px;border:1px solid {{ op.border }};background:{{ op.bg }};opacity:{{ op.opacity }};color:#1F2A37">
                         <span style="font-size:14px;font-weight:500;line-height:1.35">{{ op.t }}</span>
-                        <span style="font-size:12.5px;color:#5b5d57;line-height:1.4">{{ op.d }}</span>
-                        <sc-if value="{{ op.showFx }}" hint-placeholder-val="{{ false }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#5b5d57">{{ op.fx }}</span></sc-if>
+                        <span style="font-size:12.5px;color:#4A5A6A;line-height:1.4">{{ op.d }}</span>
+                        <sc-if value="{{ op.showFx }}" hint-placeholder-val="{{ false }}"><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#4A5A6A">{{ op.fx }}</span></sc-if>
                       </button>
                     </sc-for>
                   </div>
@@ -597,8 +647,8 @@
             </div>
             <sc-if value="{{ notResolved }}" hint-placeholder-val="{{ true }}">
               <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
-                <button sc-camel-on-click="{{ resolve }}" style="border:0;border-radius:8px;padding:14px 22px;font-size:15px;font-weight:600;cursor:pointer;background:{{ resolveBg }};color:#f5f4ef">Resolve round {{ roundNum }}</button>
-                <span style="font-size:13px;color:#5b5d57">{{ resolveNote }}</span>
+                <button sc-camel-on-click="{{ resolve }}" style="border:0;border-radius:8px;padding:14px 22px;font-size:15px;font-weight:600;cursor:pointer;background:{{ resolveBg }};color:#F4F6F9">Resolve round {{ roundNum }}</button>
+                <span style="font-size:13px;color:#4A5A6A">{{ resolveNote }}</span>
               </div>
             </sc-if>
           </div>
@@ -606,81 +656,131 @@
 
         <sc-if value="{{ isDebrief }}" hint-placeholder-val="{{ false }}">
           <div style="display:flex;flex-direction:column;gap:20px">
-            <section style="background:#fbfaf7;border:1px solid #dcdad2;border-top:4px solid {{ outColor }};border-radius:10px;padding:24px;display:flex;flex-direction:column;gap:10px">
-              <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#5b5d57">2040 outcome</span>
+            <section style="background:#FFFFFF;border:1px solid #C9D6E3;border-top:4px solid {{ outColor }};border-radius:10px;padding:24px;display:flex;flex-direction:column;gap:10px">
+              <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#4A5A6A">2040 outcome</span>
               <h2 style="margin:0;font-size:30px;font-weight:600;line-height:1.15">{{ outName }}</h2>
               <p style="margin:0;max-width:820px;font-size:16px;text-wrap:pretty">{{ outText }}</p>
             </section>
             <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px;align-items:start">
-              <section style="background:#fbfaf7;border:1px solid #dcdad2;border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:10px">
+              <section style="background:#FFFFFF;border:1px solid #C9D6E3;border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:10px">
                 <h3 style="margin:0;font-size:16px;font-weight:600">Robust (“no-regret”) moves made</h3>
                 <sc-for list="{{ noRegret }}" as="nr" hint-placeholder-count="5">
-                  <div style="display:flex;justify-content:space-between;gap:12px;font-size:14px;padding:6px 0;border-bottom:1px solid #e7e5de"><span>{{ nr.n }}</span><span style="font-family:'IBM Plex Mono',monospace;color:{{ nr.c }}">{{ nr.t }}</span></div>
+                  <div style="display:flex;justify-content:space-between;gap:12px;font-size:14px;padding:6px 0;border-bottom:1px solid #DCE5EF"><span>{{ nr.n }}</span><span style="font-family:'IBM Plex Mono',monospace;color:{{ nr.c }}">{{ nr.t }}</span></div>
                 </sc-for>
               </section>
-              <section style="background:#fbfaf7;border:1px solid #dcdad2;border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:10px">
+              <section style="background:#FFFFFF;border:1px solid #C9D6E3;border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:10px">
                 <h3 style="margin:0;font-size:16px;font-weight:600">Debrief questions</h3>
                 <ol style="margin:0;padding-left:20px;display:flex;flex-direction:column;gap:8px;font-size:14px;text-wrap:pretty">
                   <sc-for list="{{ debriefQs }}" as="q" hint-placeholder-count="5"><li>{{ q }}</li></sc-for>
                 </ol>
               </section>
             </div>
-            <section style="background:#fbfaf7;border:1px solid #dcdad2;border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:12px">
+            <section style="background:#FFFFFF;border:1px solid #C9D6E3;border-radius:10px;padding:20px;display:flex;flex-direction:column;gap:12px">
               <h3 style="margin:0;font-size:16px;font-weight:600">Decision log</h3>
               <div style="display:flex;flex-direction:column">
                 <sc-for list="{{ logRows }}" as="lr" hint-placeholder-count="9">
-                  <div style="display:grid;grid-template-columns:minmax(140px,200px) repeat(3,minmax(0,1fr));gap:12px;padding:10px 0;border-bottom:1px solid #e7e5de;font-size:13px">
+                  <div style="display:grid;grid-template-columns:minmax(140px,200px) repeat(3,minmax(0,1fr));gap:12px;padding:10px 0;border-bottom:1px solid #DCE5EF;font-size:13px">
                     <span style="font-weight:600">{{ lr.name }}</span>
                     <sc-for list="{{ lr.picks }}" as="pk" hint-placeholder-count="3"><span style="color:#3d3f3a">{{ pk }}</span></sc-for>
                   </div>
                 </sc-for>
               </div>
             </section>
-            <div><button sc-camel-on-click="{{ restart }}" style="border:1px solid #1c1d1a;background:transparent;border-radius:8px;padding:12px 20px;font-size:15px;font-weight:600;cursor:pointer">Run again</button></div>
+                        <div style="display:flex;flex-direction:column;gap:10px">
+              <h3 style="margin:0;font-size:16px;font-weight:600">How the run unfolded</h3>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ timelineRows }}" as="tr" hint-placeholder-count="3">
+                  <div style="border:1px solid #C9D6E3;border-radius:8px;padding:12px;background:#FFFFFF;display:flex;flex-direction:column;gap:4px">
+                    <span style="font-weight:600;font-size:14px">{{ tr.label }}</span>
+                    <span style="font-size:12.5px;color:#4A5A6A;line-height:1.45">{{ tr.drivers }}</span>
+                    <span style="font-size:13px;color:#1F2A37">Position {{ tr.pos }} · Trending toward {{ tr.scen }} · {{ tr.turn }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <h3 style="margin:0;font-size:16px;font-weight:600">Do the four ESB recommendations hold in each scenario?</h3>
+              <p style="margin:0;font-size:13px;color:#4A5A6A;line-height:1.45">Hypotheses from the Evidence brief, to test in play. Read the column of the scenario this run reached.</p>
+              <div style="overflow-x:auto">
+                <table style="width:100%;border-collapse:collapse;font-size:13px;background:#FFFFFF">
+                  <thead><tr style="text-align:left;border-bottom:1px solid #C9D6E3"><th style="padding:8px 10px;font-weight:600">Recommendation</th><th style="padding:8px 10px;font-weight:600">Cooperative Resilience</th><th style="padding:8px 10px;font-weight:600">Fragmented Patchwork</th><th style="padding:8px 10px;font-weight:600">Retrenchment and Exposure</th></tr></thead>
+                  <tbody>
+                    <tr style="border-bottom:1px solid #DCE5EF"><td style="padding:8px 10px;vertical-align:top">Extend regional pooling to underserved states</td><td style="padding:8px 10px;vertical-align:top">Holds: pools grow with cooperation.</td><td style="padding:8px 10px;vertical-align:top">Depends: Caribbean and Pacific pools grow; the AIS and micro-states stay out.</td><td style="padding:8px 10px;vertical-align:top">Fails without donor premium support.</td></tr>
+                    <tr style="border-bottom:1px solid #DCE5EF"><td style="padding:8px 10px;vertical-align:top">Build institutional and legal capacity, including the MVI</td><td style="padding:8px 10px;vertical-align:top">Holds: capacity follows finance.</td><td style="padding:8px 10px;vertical-align:top">Depends: capacity is uneven across regions.</td><td style="padding:8px 10px;vertical-align:top">Fails: capacity is lost when projects end.</td></tr>
+                    <tr style="border-bottom:1px solid #DCE5EF"><td style="padding:8px 10px;vertical-align:top">Strengthen risk data and trigger design</td><td style="padding:8px 10px;vertical-align:top">Holds: SIDS own their data.</td><td style="padding:8px 10px;vertical-align:top">Depends: data stays with MDBs in some regions.</td><td style="padding:8px 10px;vertical-align:top">Fails: external data erodes trust in payouts.</td></tr>
+                    <tr><td style="padding:8px 10px;vertical-align:top">Create a structured interface to mobilise private capital</td><td style="padding:8px 10px;vertical-align:top">Holds: private partners enter at scale.</td><td style="padding:8px 10px;vertical-align:top">Depends: interest only where pools are mature.</td><td style="padding:8px 10px;vertical-align:top">Fails: private capital withdraws.</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <h3 style="margin:0;font-size:16px;font-weight:600">What this scenario means for each role</h3>
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px">
+                <sc-for list="{{ roleNarr }}" as="rn" hint-placeholder-count="9">
+                  <div style="border:1px solid #C9D6E3;border-radius:8px;padding:12px;background:#FFFFFF;display:flex;flex-direction:column;gap:4px"><span style="font-weight:600;font-size:14px">{{ rn.name }}</span><span style="font-size:13px;color:#1F2A37;line-height:1.45">{{ rn.text }}</span></div>
+                </sc-for>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <h3 style="margin:0;font-size:16px;font-weight:600">Limits of this run</h3>
+              <ul style="margin:0;padding-left:20px;font-size:13px;color:#4A5A6A;line-height:1.5">
+                <sc-for list="{{ limits }}" as="lt" hint-placeholder-count="5"><li>{{ lt }}</li></sc-for>
+              </ul>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <div><button sc-camel-on-click="{{ toggleText }}" style="border:1px solid #00335B;background:#00335B;color:#F4F6F9;border-radius:8px;padding:12px 20px;font-size:15px;font-weight:600;cursor:pointer">{{ textLabel }}</button></div>
+              <sc-if value="{{ showText }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;flex-direction:column;gap:10px;max-width:820px;background:#FFFFFF;border:1px solid #C9D6E3;border-radius:10px;padding:20px">
+                  <h3 style="margin:0;font-size:16px;font-weight:600">{{ textHead }}</h3>
+                  <sc-for list="{{ scenParas }}" as="sp" hint-placeholder-count="8"><p style="margin:0;font-size:14px;line-height:1.6;color:#1F2A37">{{ sp.t }}</p></sc-for>
+                </div>
+              </sc-if>
+            </div>
+            <div><button sc-camel-on-click="{{ restart }}" style="border:1px solid #00335B;background:transparent;border-radius:8px;padding:12px 20px;font-size:15px;font-weight:600;cursor:pointer">Run again</button></div>
           </div>
         </sc-if>
       </div>
 
       <aside style="flex:1 1 320px;max-width:100%;display:flex;flex-direction:column;gap:16px;position:sticky;top:16px">
-        <section style="background:#fbfaf7;border:1px solid #dcdad2;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px">
-          <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:600">Scenario space</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#5b5d57">{{ posText }}</span></div>
+        <section style="background:#FFFFFF;border:1px solid #C9D6E3;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:600">Scenario space</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#4A5A6A">{{ posText }}</span></div>
           <div style="display:flex;gap:8px">
-            <div style="writing-mode:vertical-rl;transform:rotate(180deg);font-family:'IBM Plex Mono',monospace;font-size:10px;color:#5b5d57;text-align:center">B · externally driven ↔ SIDS-led</div>
+            <div style="writing-mode:vertical-rl;transform:rotate(180deg);font-family:'IBM Plex Mono',monospace;font-size:10px;color:#4A5A6A;text-align:center">B · externally driven ↔ SIDS-led</div>
             <div style="flex:1;display:flex;flex-direction:column;gap:6px">
-              <div style="position:relative;width:100%;aspect-ratio:1/1;border:1px solid #c9c7be;background:#f5f4ef;overflow:hidden">
-                <div style="position:absolute;left:64%;top:0;right:0;bottom:64%;background:oklch(0.92 0.04 195)"></div>
-                <div style="position:absolute;left:0;top:64%;right:64%;bottom:0;background:oklch(0.92 0.04 30)"></div>
-                <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:#dcdad2"></div>
-                <div style="position:absolute;top:50%;left:0;right:0;height:1px;background:#dcdad2"></div>
+              <div style="position:relative;width:100%;aspect-ratio:1/1;border:1px solid #B8C7D6;background:#F7F9FC;overflow:hidden">
+                <div style="position:absolute;left:64%;top:0;right:0;bottom:64%;background:#D9F2F0"></div>
+                <div style="position:absolute;left:0;top:64%;right:64%;bottom:0;background:#FDE9D6"></div>
+                <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:#C9D6E3"></div>
+                <div style="position:absolute;top:50%;left:0;right:0;height:1px;background:#C9D6E3"></div>
                 <span style="position:absolute;right:6px;top:6px;font-size:10.5px;font-weight:600;color:oklch(0.4 0.09 195);text-align:right;width:32%">Cooperative Resilience</span>
                 <span style="position:absolute;left:6px;bottom:6px;font-size:10.5px;font-weight:600;color:oklch(0.4 0.09 30);width:32%">Retrenchment &amp; Exposure</span>
                 <span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:10.5px;font-weight:600;color:oklch(0.42 0.09 75);text-align:center;width:28%;margin-top:-16px">Fragmented Patchwork</span>
                 <sc-for list="{{ trail }}" as="tp" hint-placeholder-count="1">
-                  <div style="position:absolute;left:{{ tp.x }}%;top:{{ tp.y }}%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:#8d8f88"></div>
+                  <div style="position:absolute;left:{{ tp.x }}%;top:{{ tp.y }}%;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;border-radius:50%;background:#8497AA"></div>
                 </sc-for>
-                <div style="position:absolute;left:{{ dotX }}%;top:{{ dotY }}%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:#1c1d1a;border:3px solid #f5f4ef;transition:left .5s,top .5s"></div>
+                <div style="position:absolute;left:{{ dotX }}%;top:{{ dotY }}%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:#00335B;border:3px solid #F4F6F9;transition:left .5s,top .5s"></div>
               </div>
-              <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#5b5d57;text-align:center">A · fragmented &amp; declining ↔ scaled &amp; coordinated</div>
+              <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:#4A5A6A;text-align:center">A · fragmented &amp; declining ↔ scaled &amp; coordinated</div>
             </div>
           </div>
           <div style="font-size:13px">Now: <strong style="font-weight:600">{{ trendName }}</strong></div>
         </section>
-        <section style="background:#fbfaf7;border:1px solid #dcdad2;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px">
-          <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:600">Indicators</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#5b5d57">change since 2026</span></div>
+        <section style="background:#FFFFFF;border:1px solid #C9D6E3;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline"><span style="font-weight:600">Indicators</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:#4A5A6A">change since 2026</span></div>
           <sc-for list="{{ indicators }}" as="ind" hint-placeholder-count="7">
             <div style="display:flex;flex-direction:column;gap:4px">
               <div style="display:flex;justify-content:space-between;font-size:13px;gap:8px"><span>{{ ind.n }}</span><span style="font-family:'IBM Plex Mono',monospace"><span>{{ ind.v }}</span> <span style="color:{{ ind.c }}">{{ ind.d }}</span></span></div>
-              <div style="height:6px;background:#e7e5de;border-radius:3px;overflow:hidden"><div style="height:100%;width:{{ ind.w }}%;background:{{ ind.bar }};transition:width .5s"></div></div>
+              <div style="height:6px;background:#DCE5EF;border-radius:3px;overflow:hidden"><div style="height:100%;width:{{ ind.w }}%;background:{{ ind.bar }};transition:width .5s"></div></div>
             </div>
           </sc-for>
         </section>
         <sc-if value="{{ isPlay }}" hint-placeholder-val="{{ false }}">
-          <section style="background:#fbfaf7;border:1px solid #dcdad2;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:8px">
+          <section style="background:#FFFFFF;border:1px solid #C9D6E3;border-radius:10px;padding:18px;display:flex;flex-direction:column;gap:8px">
             <span style="font-weight:600">Facilitator wildcards</span>
             <sc-for list="{{ wildButtons }}" as="wb" hint-placeholder-count="3">
-              <button sc-camel-on-click="{{ wb.fire }}" style="text-align:left;border:1px solid #dcdad2;background:{{ wb.bg }};border-radius:8px;padding:9px 12px;font-size:13px;cursor:{{ wb.cursor }};color:{{ wb.fg }};display:flex;justify-content:space-between;gap:8px"><span>{{ wb.n }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px">{{ wb.s }}</span></button>
+              <button sc-camel-on-click="{{ wb.fire }}" style="text-align:left;border:1px solid #C9D6E3;background:{{ wb.bg }};border-radius:8px;padding:9px 12px;font-size:13px;cursor:{{ wb.cursor }};color:{{ wb.fg }};display:flex;justify-content:space-between;gap:8px"><span>{{ wb.n }}</span><span style="font-family:'IBM Plex Mono',monospace;font-size:11px">{{ wb.s }}</span></button>
             </sc-for>
-            <button sc-camel-on-click="{{ restart }}" style="margin-top:10px;border:1px solid #1c1d1a;background:transparent;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:600;cursor:pointer;color:#1c1d1a;text-align:left">Reset entire simulation</button>
+            <button sc-camel-on-click="{{ restart }}" style="margin-top:10px;border:1px solid #00335B;background:transparent;border-radius:8px;padding:10px 14px;font-size:13px;font-weight:600;cursor:pointer;color:#1F2A37;text-align:left">Reset entire simulation</button>
           </section>
         </sc-if>
       </aside>
@@ -695,7 +795,7 @@ const SHORT = {a:'Cooperation',b:'SIDS agency',gap:'Gap',reach:'Reach',debt:'Deb
 const NAMES = {a:'Cooperation (A)',b:'SIDS agency (B)',gap:'Protection gap',reach:'Last-mile reach',debt:'Debt stress',data:'SIDS data ownership',pre:'Pre-arranged finance share',pool:'Regional pooling',trust:'Coalition trust'};
 const INV = {gap:true,debt:true};
 const START = {a:-2,b:-2,gap:60,reach:30,debt:58,data:25,pre:20,pool:35,trust:50};
-const TEAL='oklch(0.52 0.09 195)', CORAL='oklch(0.52 0.09 30)', AMBER='oklch(0.55 0.09 75)';
+const TEAL='#00A19B', CORAL='#F58220', AMBER='#0072BC';
 const ROLES = [
  {id:'car',name:'Caribbean SIDS governments',desc:'Finance ministries and disaster agencies. Mature CCRIF membership, high debt.',interest:'protect fiscal space; debt service already absorbs a large share of revenue.'},
  {id:'pac',name:'Pacific SIDS governments',desc:'PCRIC and Pacific Resilience Facility members, including micro-states facing habitability risk.',interest:'keep sovereignty over data and decisions; some members face existential risk.'},
@@ -835,6 +935,134 @@ const B_COALS = [
   {n:'Continuity-of-state compact',req:{pac:['compact'],un:['compact']},fx:{trust:4,b:2}},
   {n:'MVI-based concessional compact',req:{mdb:['mvi'],reg:['mvi']},fx:{a:3,debt:-3}}]
 ];
+// One decision question per role per round (the options below answer it).
+const QUESTIONS = {
+ car:['Your CCRIF cover is due for renewal. What do you do with it?','Debt service is rising. Do you keep paying for cover, or cut it?','Storms are more intense in 2035-2040. How do you protect fiscal space?'],
+ pac:['PCRIC membership is open. Do you bring in more members or fund technical work first?','After a near miss, what do you press PCRIC and donors for?','Which Pacific expansion do you back as the pool matures?'],
+ ais:['No regional pool exists. Do you start a feasibility study, buy cover alone, or wait?','Donors signal interest in a pool. Do you commit premiums now?','The pool question returns. Which path do you take?'],
+ mdb:['How do you support SIDS pre-arranged finance as ODA budgets fall?','Debt pressure is rising. Do you lend, cut or pilot?','The 2035 agenda needs funding. Which instrument do you use?'],
+ ins:['Reinsurance is available at a price. Do you enter SIDS markets, expand selectively, or hold?','A loss cluster hits the Caribbean. Do you raise prices or withdraw?','Pricing has softened. Do you return to the smaller markets?'],
+ reg:['Your membership is growing. Do you add members, run training, or pause?','Members ask for more services. Which do you prioritise?','The MVI is on the agenda. Do you adopt it in allocation rules?'],
+ lm:['Payouts need a delivery channel. Which one do you use first?','A payout is delayed. Do you pay in cash, through wallets, or wait?','Households need faster payouts. Which channel scales?'],
+ unossc:['The Global Alliance is taking shape. Do you convene, broker or pause?','Partners want a SIDS-led pool. Do you convene an AIS exchange?','The alliance needs SIDS members. How do you bring them in?'],
+ un:['UN country funds can be pooled. Do you pool them into pre-arranged finance?','Debt clauses are on the table. Do you push pause clauses?','Programmes overlap under budget pressure. What do you cut?']
+};
+// Follow-up questions (Site B). Round 2 (index 1) reads the role's round-1 action; round 3 (index 2) reads its round-2 action.
+const QF = {
+ car:{1:{pool:'CCRIF now covers the next layer. Do you add a second product, or hold this layer?',partner:'The Global Shield subsidy is in place. Do you use it to widen cover to more of the budget?',private:'The cat bond is issued. Do you keep it next to CCRIF, or consolidate?',cover:'Your cover is in place. Do you renew at the same level, or move to a new layer?',wait:'You deferred the renewal last round. Is the gap now too large to hold?',cut:'Cover was cut to the core layer. Do you rebuild it now, or keep the savings?',debt:'Premiums were paid by borrowing. Do you refinance that debt, or keep paying?'},
+      2:{pool:'Storms are stronger in 2035-2040. Is the expanded layer enough, or do you need a new product?',partner:'Partners now fund part of your cover. Do you keep relying on them, or pay for it yourselves?',private:'The cat bond has a trigger date. Do you renew it, or let it lapse?',cover:'Cover has held for two periods. Do you cut it to protect fiscal space, or keep it?',wait:'Two periods without renewal. Do you rebuild cover, or accept the gap as permanent?',cut:'You cut cover earlier. Is fiscal space now enough to rebuild it?',debt:'Debt-funded premiums continue. Do you restructure the debt with a hurricane clause?'}},
+ pac:{1:{pool:'The shared pool is formed. Do you bring in more members, or fund the trigger work first?',cover:'Cooperative cover is running. Do you extend it to more households?',data:'The trigger model is built. Do you use it to set premiums for the next member?',partner:'Donor support is in place. Do you use it to pay premiums, or to build your own capacity?',wait:'A discretionary payment came after a missed trigger. Do you press for the same next time?',status:'You kept the team on state budget. Do you now fund a new product?'},
+      2:{pool:'The pool has members from three regions. Do you widen it again, or consolidate?',cover:'Cooperative cover has run for two periods. Do you move it to a new hazard?',data:'Your trigger model is in use. Do you share it with the AIS?',partner:'Donor support is ending. Do you replace it with premiums, or cut the programme?',wait:'Discretionary payments have become routine. Do you push for a formal trigger change?',status:'Your team has held for two periods. Is it time to launch a product?'}},
+ ais:{1:{pool:'Your pool is launched. Do you bring the smallest states in first, or the largest?',cover:'You are buying cover outside a pool. Do you keep doing that, or start the pool study?',data:'You shared data with the Pacific. Do you ask for trigger help in return?',study:'The feasibility study is ready. Do you launch a pool or wait for donors?',wait:'You waited for donors. Is there a pool offer on the table now?',debt:'Reconstruction borrowing is rising. Do you pursue a debt swap instead?'},
+      2:{pool:'The AIS pool runs. Do you extend it to the nearest neighbours?',cover:'Cover bought outside a pool keeps costing more. Do you join a pool now?',data:'Data sharing has improved triggers. Do you ask for a regional data hub?',study:'The study has been shelved for two periods. Do you revive it?',wait:'Still no pool after two periods. What would make you move?',debt:'Debt-funded recovery continues. Do you restructure the debt?'}},
+ mdb:{1:{pool:'You co-finance a pilot pool. Do you scale it, or hold it at pilot size?',partner:'You funded premiums through the Global Shield. Do you tie future lending to cover?',status:'Concessional lines are steady. Do you shift to loans as ODA falls?',debt:'You offered a debt swap. Do you extend it to other small states?',wait:'Disbursement was delayed. Do you release the money now?',cut:'You funded only a small pilot. Do you add money, or hold back?',cover:'Lending is tied to cover. Do you enforce the condition?'},
+      2:{pool:'The pilot pool is running. Do you guarantee it, or leave it to the market?',partner:'The Global Shield subsidy is ending. Do you replace it?',status:'Lines have stayed flat for two periods. Do you increase them?',debt:'Debt-swap deals are maturing. Do you renew them?',wait:'Delayed money is still delayed. Do you attach a deadline?',cut:'You cut back earlier. Is the ODA gap now bigger?',cover:'Lending with cover conditions has grown. Do you keep the condition?'}},
+ ins:{1:{cover:'You entered or expanded the market. Do you keep the price, or lower it to win share?',pool:'You offered multi-year reinsurance to the pools. Do you hold it for the full term?',data:'You co-developed products with local data. Do you price on it?',wait:'You held capacity. Is the market now worth re-entering?',cut:'You withdrew from smaller markets. Do you come back when prices settle?'},
+      2:{cover:'Cover has run for two periods. Do you raise prices after a loss cluster?',pool:'The multi-year deals are ending. Do you renew them?',data:'Local data is now in your pricing. Do you share it with the pools?',wait:'You stayed out for two periods. Do you re-enter now?',cut:'You left the smaller markets. Do you return with a new product?'}},
+ reg:{1:{pool:'You added members or expanded a product. Do you keep growing, or consolidate?',partner:'Training has started across regions. Do you extend it to the AIS?',status:'You adopted the MVI rules. Do you apply them to the next allocation?',data:'The data pilot is running. Do you scale it to all members?',cut:'Services were cut. Do you restore them when funds allow?',wait:'You paused new products. Is the pause still justified?'},
+      2:{pool:'The pool has grown. Do you admit the AIS, or stay regional?',partner:'Training is ongoing. Do you turn it into a permanent programme?',status:'The MVI is in allocation rules. Do you defend it in the next review?',data:'Shared data is in use. Do you open it to the AIS?',cut:'Cuts have lasted two periods. Do you restore services or reduce membership?',wait:'Products have been paused two periods. Do you restart them?'}},
+ lm:{1:{payout:'Payouts now move through your channel. Do you add a second channel, or expand this one?',wait:'Payouts were delayed. Do you pay on the current list, or keep verifying?',cut:'You paid only registered beneficiaries. Do you widen the list now?',status:'You hold cash locally. Do you release it to the next payout?'},
+      2:{payout:'Your channel has run for two periods. Do you extend it to the diaspora?',wait:'Verification delays persist. Do you change the verification rule?',cut:'Your list still excludes some households. Do you widen it?',status:'Local cash reserves are in place. Do you invest them in the channel?'}},
+ unossc:{1:{partner:'You convened partners. Do you turn the meetings into a brokering service?',data:'The data platform is live. Do you open it to all SIDS?',wait:'You paused brokering. Is there a partner to restart with?',cut:'You convened less often. Do you go back to the full schedule?'},
+      2:{partner:'Partners are engaged. Do you bring SIDS into the Global Alliance?',data:'The platform has users. Do you connect it to the pools?',wait:'Brokering has been paused two periods. Do you restart?',cut:'Convening has been reduced for two periods. Do you rebuild it?'}},
+ un:{1:{pool:'UN country funds are pooled. Do you extend the pool to more countries?',partner:'You coordinated programmes. Do you formalise the coordination?',debt:'Debt pause clauses are on the table. Do you push them in creditor talks?',cover:'You ring-fenced an anticipatory fund. Do you release it on triggers?',status:'Programmes have stayed the same. Do you add a new commitment?',cut:'You consolidated offices. Do you keep the savings, or reinvest them?',wait:'Funding was shifted to emergency response. Do you move it back to prevention?'},
+      2:{pool:'The pooled funds are running. Do you admit more agencies?',partner:'Coordination is routine. Do you reduce duplication further?',debt:'Pause clauses are in place. Do you extend them to new loans?',cover:'The anticipatory fund has triggered. Do you refill it?',status:'The status quo has lasted two periods. Do you change it?',cut:'Offices are consolidated. Do you rebuild any capacity?',wait:'Prevention funding is still low. Do you rebalance?'}}
+};
+// Continuation options (Site B). In rounds 2 and 3, the first option of a role follows its own previous action.
+// Fields: title, description, effects, coalition key ('pool', 'data', 'rails' or 'none').
+const FO = {
+ car:{1:{pool:['Add a second CCRIF product','Extend the layer you already expanded.',{pre:3,pool:1},'pool'],partner:['Widen Global Shield cover to more of the budget','Use the subsidy to cover more members.',{pre:3,reach:1},'none'],private:['Renew the cat bond next to CCRIF','Keep private capital in the stack.',{pre:3,debt:-1},'none'],cover:['Move your cover to a new layer','Add a layer above the current cover.',{pre:2,gap:-1},'none'],wait:['Rebuild the deferred cover now','Renew at the level you skipped.',{pre:2,debt:1},'none'],cut:['Rebuild cover from the savings','Restore the core layer you cut.',{pre:2,debt:1},'none'],debt:['Refinance the premium debt','Move borrowed premiums onto longer terms.',{debt:-2,pre:1},'none']},
+      2:{pool:['Extend CCRIF to a second hazard','Add a product that matches the storms of 2035-2040.',{pre:3,pool:1},'pool'],partner:['Replace donor premiums with your own budget','Take on the subsidised premiums yourselves.',{pre:2,debt:2},'none'],private:['Renew the cat bond','Keep the trigger date in place.',{pre:3,debt:-1},'none'],cover:['Renew cover at the same level','Hold cover while budgets allow.',{pre:2},'none'],wait:['Accept the gap as permanent','Stop renewing and rely on the reserve.',{gap:3,debt:1},'none'],cut:['Rebuild cover now','Restore the layer after the fiscal space returns.',{pre:3,debt:1},'none'],debt:['Restructure with a hurricane clause','Use the clause to defer debt after a storm.',{debt:-3,trust:1},'none']}},
+ pac:{1:{pool:['Bring in the next member state','Admit a new country to the shared pool.',{pool:3,reach:1},'pool'],cover:['Extend cooperative cover to more households','Add a second cooperative to the programme.',{reach:3,pre:1},'none'],data:['Use the trigger model to price premiums','Set premiums with your own model.',{data:2,pre:1},'none'],partner:['Turn donor help into a standing programme','Keep donor support on a fixed schedule.',{b:2,trust:1},'none'],wait:['Press for a formal trigger change','Ask the pool to fix the trigger rule.',{pool:1,trust:1},'none'],status:['Launch the next product','Use the team you kept to design a product.',{pre:2,b:1},'none']},
+      2:{pool:['Admit members from a third region','Widen the pool beyond the Pacific.',{pool:3,reach:1},'pool'],cover:['Move cooperative cover to a new hazard','Add drought or flood cover.',{reach:2,pre:2},'none'],data:['Share the trigger model with the AIS','Offer the model to the AIS pool.',{data:2,b:1},'none'],partner:['Replace donor support with premiums','Pay for cover from state budgets.',{pre:2,debt:1},'none'],wait:['Make discretionary payments routine','Plan around top-ups rather than triggers.',{trust:-1,reach:1},'none'],status:['Start a new product line','Launch a product the team has designed.',{pre:2,b:1},'none']}},
+ ais:{1:{pool:['Bring the smallest states in first','Start the pool with the states that have least cover.',{pool:4,pre:2},'pool'],cover:['Join the regional pool now','Move your cover into a pool.',{pool:2,pre:2},'pool'],data:['Ask the Pacific for trigger help','Trade shared data for trigger design.',{data:3,trust:1},'data'],study:['Launch a pool on the study\'s design','Commit premiums to the pool the study proposed.',{pool:5,b:1},'pool'],wait:['Set a deadline for donors','Start the pool if no offer arrives by a set date.',{pool:2,trust:1},'none'],debt:['Start a debt swap instead','Convert reconstruction debt into resilience finance.',{debt:-2,pre:2},'none']},
+      2:{pool:['Extend the pool to neighbouring states','Admit states beyond the first group.',{pool:4,pre:1},'pool'],cover:['Join a pool now, at the next renewal','Move cover into the pool when it renews.',{pool:3,pre:1},'pool'],data:['Ask for a regional data hub','Build a hub for trigger data.',{data:4,b:1},'data'],study:['Revive the shelved study','Restart the feasibility work.',{pool:2,b:1},'none'],wait:['Commit to a pool now','Stop waiting and join a regional pool.',{pool:4,pre:1},'pool'],debt:['Restructure the debt','Use a swap or a clause to cut debt service.',{debt:-3,b:1},'none']}},
+ mdb:{1:{pool:['Scale the pilot pool','Guarantee the pool beyond the pilot.',{pre:3,pool:2},'pool'],partner:['Tie Global Shield premiums to lending','Make subsidised premiums part of loan terms.',{pre:2,reach:2},'none'],status:['Shift concessional lines to loans','Keep lending but move it to market terms.',{debt:2,a:-1},'none'],debt:['Extend the debt swap to other small states','Offer the swap to more countries.',{debt:-2,pre:1},'none'],wait:['Release the delayed money','Disburse the pledged funds now.',{gap:-2,trust:2},'none'],cut:['Add money to the pilot','Expand the pilot after its first results.',{pre:2,a:1},'none'],cover:['Enforce the cover condition','Refuse loans without cover.',{pre:3,trust:-1},'none']},
+      2:{pool:['Guarantee the pool','Back the pool with a guarantee.',{pre:3,pool:2,a:1},'facility'],partner:['Replace the subsidy with lending','Fund premiums through loans after the subsidy ends.',{pre:2,debt:1},'none'],status:['Increase concessional lines','Raise lending after two flat periods.',{pre:1,a:1},'none'],debt:['Renew the debt swaps','Keep the swaps running at maturity.',{debt:-2,pre:1},'none'],wait:['Attach a deadline to disbursement','Set a date for the money to flow.',{gap:-2,trust:1},'none'],cut:['Rebuild the ODA gap','Restore the cut lines.',{a:1,pre:1},'none'],cover:['Keep the cover condition','Retain the rule on loans.',{pre:2,trust:1},'none']}},
+ ins:{1:{cover:['Keep the price, and grow share','Hold your price while you win clients.',{pre:2,pool:1},'none'],pool:['Hold multi-year terms to the end','Keep the reinsurance commitment for the full term.',{pool:3,pre:1},'pool'],data:['Price on local data','Use SIDS-held data in your rates.',{data:2,pre:2,trust:1},'none'],cut:['Return to the smaller markets','Re-enter once prices settle.',{pre:2,pool:1},'none'],wait:['Re-enter with a new product','Launch a product for the markets you held back from.',{pre:3,trust:1},'none']},
+      2:{cover:['Raise prices after the loss cluster','Reprice to cover the recent losses.',{pre:-2,debt:1},'none'],pool:['Renew the multi-year deals','Keep the reinsurance commitment past the term.',{pool:3,pre:2},'pool'],data:['Share local data with the pools','Open your pricing data to the pools.',{data:3,trust:2},'data'],cut:['Return with a new product','Re-enter with a product the market can price.',{pre:3,trust:1},'none'],wait:['Re-enter now','Write cover in the markets you left.',{pre:3,pool:1},'none']}},
+ reg:{1:{pool:['Keep growing the pools','Add the next member or product.',{pool:3,reach:2},'pool'],partner:['Extend training to the AIS','Share the programme across all three regions.',{b:3,trust:1},'compact'],status:['Apply the MVI in the next allocation','Use the MVI to set concessional terms.',{b:2,pre:1},'none'],data:['Scale the data pilot to all members','Open the pilot to every member.',{data:3,trust:1},'data'],cut:['Restore services','Bring back the services you cut.',{trust:3,pool:1},'none'],wait:['Restart new products','Launch the products you paused.',{pre:2,pool:1},'none']},
+      2:{pool:['Admit the AIS to the pool','Open membership to AIS states.',{pool:4,reach:1},'pool'],partner:['Make training a permanent programme','Fund the training beyond the pilot.',{b:3,trust:2},'compact'],status:['Defend the MVI in the next review','Keep the MVI in allocation rules.',{b:2,trust:1},'none'],data:['Open shared data to the AIS','Give the AIS access to the pool data.',{data:3,b:1},'data'],cut:['Restore services or shrink membership','Choose between services and members.',{trust:1,pool:-1},'none'],wait:['Restart the paused products','Relaunch products after the pause.',{pre:3,pool:1},'none']}},
+ lm:{1:{payout:['Add a second payment channel','Pay through a channel your members already use.',{reach:3,trust:1},'rails'],wait:['Pay on the current list','Release payouts while verification runs.',{reach:2,trust:-1},'rails'],cut:['Widen the beneficiary list','Include households not yet registered.',{reach:3,gap:-1},'none'],status:['Release the local cash reserves','Put reserves into the next payout.',{reach:2,trust:1},'none']},
+      2:{payout:['Extend payouts to diaspora households','Add remittance networks as a channel.',{reach:3,pre:1},'rails'],wait:['Change the verification rule','Verify after payment, not before.',{reach:3,trust:-1},'rails'],cut:['Include the excluded households','Add households outside the register.',{reach:3,gap:-1},'none'],status:['Invest reserves in the channel','Use reserves to build the payout channel.',{reach:2,pre:1},'none']}},
+ unossc:{1:{partner:['Turn the meetings into a brokering service','Match requests with partners.',{pre:2,a:2},'none'],data:['Open the platform to all SIDS','Give every SIDS state access.',{data:3,a:1},'none'],wait:['Restart brokering with a partner','Set up a first partner match.',{a:2,pre:1},'none'],cut:['Return to the full convening schedule','Hold the regular meetings again.',{a:2,trust:1},'none']},
+      2:{partner:['Bring SIDS into the Global Alliance','Recruit SIDS members to the alliance.',{a:3,trust:1},'none'],data:['Connect the platform to the pools','Link the data platform to the regional pools.',{data:3,pool:1},'data'],wait:['Restart brokering','Restart after two paused periods.',{a:2,pre:1},'none'],cut:['Rebuild the convening schedule','Restore the meetings cut earlier.',{a:2,trust:1},'none']}},
+ un:{1:{pool:['Extend the pool to more countries','Add country funds beyond the first group.',{pre:3,reach:2},'pool'],partner:['Formalise the programme coordination','Put the joint programmes in writing.',{a:2,b:1},'none'],debt:['Push pause clauses in creditor talks','Carry the clause to every creditor.',{debt:-3,trust:1},'none'],cover:['Release the anticipatory fund on triggers','Pay out from the fund when a trigger fires.',{reach:2,pre:2},'none'],status:['Add a new commitment','Put money behind a new programme.',{a:1,pre:2},'none'],cut:['Reinvest the savings','Move the savings into programmes.',{b:2,pre:1},'none'],wait:['Move funding back to prevention','Shift money from emergency response to prevention.',{gap:-2,trust:1},'none']},
+      2:{pool:['Admit more agencies to the pooled funds','Widen the pool to more UN agencies.',{pre:3,reach:2},'pool'],partner:['Cut duplication further','Merge overlapping programmes.',{b:2,a:1},'none'],debt:['Extend pause clauses to new loans','Write the clause into new lending.',{debt:-3,trust:2},'none'],cover:['Refill the anticipatory fund','Put money back after a trigger.',{pre:3,reach:1},'none'],status:['Change the status quo','Launch a new programme in place of the old.',{a:2,b:1},'none'],cut:['Rebuild any lost capacity','Restore the capacity you cut.',{b:2,trust:1},'none'],wait:['Rebalance toward prevention','Restore prevention funding.',{gap:-3,trust:1},'none']}}
+};
+// Direct links: the target role reacts only when the source role took the action listed. at = round index shown (1 or 2).
+const LINKS = [
+ {from:'ais',acts:['study','pool'],to:'reg',at:1,text:'The AIS is studying a pool. Will you share your pool design and staff?'},
+ {from:'ais',acts:['study','pool'],to:'reg',at:2,text:'The AIS pool is moving ahead. Will you run its claims process for it?'},
+ {from:'car',acts:['pool','cover'],to:'ins',at:1,text:'Caribbean governments are buying more cover. Keep your usual price?'},
+ {from:'car',acts:['cut'],to:'ins',at:1,text:'Caribbean governments are cutting cover. Withdraw from the region, or stay?'},
+ {from:'pac',acts:['pool'],to:'reg',at:1,text:'The Pacific is joining a shared pool. Expand PCRIC to match?'},
+ {from:'mdb',acts:['pool'],to:'ins',at:1,text:'Development banks are guaranteeing pooled cover. Will you enter the markets they open?'},
+ {from:'unossc',acts:['partner'],to:'mdb',at:1,text:'UNOSSC is convening partners. Will you co-finance a pilot?'},
+ {from:'un',acts:['pool'],to:'lm',at:1,text:'The UN is pooling country funds. Will you route payouts through your channels?'}
+];
+// Decision points: the trade-off each role faces in each period (window = round).
+const DECISION_TR = {
+ car:['Fiscal space now against cover later: premiums compete with debt service.','Debt pressure against protection: cutting cover saves money but leaves the next shock uninsured.','Storm intensity against budget: stronger cover costs more each period.'],
+ pac:['Membership growth against trigger quality: more members dilute attention to data.','Donor support against self-funding: support now buys time but delays ownership.','Pool size against local control: a bigger pool shares risk but dilutes national choice.'],
+ ais:['Study now against cover now: a study delays protection for a pool that may never form.','Pool now against waiting for donors: joining early costs premiums, waiting costs cover.','Expansion against cost: extending a pool helps neighbours but raises the premium bill.'],
+ mdb:['Pilot size against reach: small pilots limit risk but leave most SIDS uncovered.','Concessional terms against loan risk: cheap money adds debt.','Guarantees against the balance sheet: guarantees mobilise private money but carry contingent risk.'],
+ ins:['Growth against unpriced risk: entering new markets risks losses.','Price against share: raising prices protects margins but loses clients.','Return against the next loss: re-entering markets rebuilds share but exposes the book again.'],
+ reg:['Growth against trust: more members and products strain the pool reserves.','Services against membership: cuts protect the reserve but weaken member trust.','Inclusion against cost: admitting more states widens the pool and the reserve burden.'],
+ lm:['Speed against verification: fast payouts risk errors; checks delay help.','Reach against cost: wider channels cost more to run.','Scale against trust: digital channels scale but exclude people without access.'],
+ unossc:['Convening against funding: meetings build alliances but produce little money.','Brokering against budget: a brokering service needs staff the budget may not hold.','Alliance growth against focus: more members dilute the SIDS focus.'],
+ un:['Pooling against control: pooled funds are efficient but agencies lose their own budgets.','Coordination against duplication: joint programmes cut overlap but slow decisions.','Prevention against response: moving money to prevention saves later but leaves current needs unmet.']
+};
+// Stakeholder resources and red lines (draft, from the paper's gap list; to confirm with the team).
+const ROLE_LIMITS = {
+ car:{res:'Finance ministry budget; CCRIF membership; access to debt-clause negotiation.',red:'No cut to core social spending to pay for cover.'},
+ pac:{res:'PCRIC membership; donor trust funds; regional data and technical staff.',red:'No loss of control over national data and triggers.'},
+ ais:{res:'National budgets; bilateral donor relations. No regional pool.',red:'No payouts that depend on external models the state cannot check.'},
+ mdb:{res:'Concessional lending; guarantees; grant budgets under pressure.',red:'No losses on concessional books beyond agreed limits.'},
+ ins:{res:'Capital; reinsurance panels; pricing models.',red:'No unpriced risk in new markets.'},
+ reg:{res:'Pool reserves; member fees; technical staff.',red:'No loss of member trust or credit rating.'},
+ lm:{res:'Member savings; mobile money networks; field staff.',red:'No payout failure that damages members’ trust.'},
+ unossc:{res:'Small budget; convening mandate; the Global Alliance.',red:'No direct implementation at scale beyond its mandate.'},
+ un:{res:'Country funds; agency mandates; pooled funds.',red:'No duplication of UNOSSC’s convening role.'}
+};
+// Milestones inside each period (from the sources in the paper and the Evidence brief).
+const MILESTONES = [
+ 'Milestones: the FfD Forum follow-up to the Sevilla Commitment and COP31 (2026). The Loss and Damage Fund start-up envelope runs to the end of 2026.',
+ 'Milestones: the 2030 SDG deadline. The Antigua and Barbuda Agenda for SIDS period ends in 2034.',
+ 'Milestones: the 2040 horizon. The successor to the Antigua and Barbuda Agenda is not defined in our sources.'
+];
+// What each 2040 scenario means for each role (draft, for the debrief; to confirm with the team).
+const NARR = {
+ car:{s1:'Fiscal space holds because cover and debt clauses work together. The Caribbean leads pooled cover.',s2:'Cover is bought, but debt keeps rising and fiscal space stays tight.',s3:'Cover is cut, debt rises, and the room for prevention disappears.'},
+ pac:{s1:'Pacific pools grow, and SIDS keep control of their data and triggers.',s2:'The Pacific advances in pools, while depending partly on donors.',s3:'Donor support ends and membership stalls, leaving states exposed.'},
+ ais:{s1:'An AIS pool forms, later and smaller than the Caribbean and Pacific pools.',s2:'The AIS has no pool and relies on individual cover at market prices.',s3:'No pool and no donor offer: states face each shock without cover.'},
+ mdb:{s1:'Donors back pools and guarantees, and concessional lending shifts to pre-arranged cover.',s2:'Donors keep funding pilots, but concessional money does not scale.',s3:'ODA falls and lending shifts to loans. Guarantees are rare.'},
+ ins:{s1:'Insurers enter SIDS markets at scale, using local data and pooled reinsurance.',s2:'Insurers enter the strongest markets and leave the smallest ones.',s3:'Insurers withdraw or raise prices, and cover is harder to buy.'},
+ reg:{s1:'Regional institutions grow their membership and share capacity across the three regions.',s2:'Regional institutions grow in the Caribbean and Pacific, but not in the AIS.',s3:'Pools are underfunded, services are cut, and member trust erodes.'},
+ lm:{s1:'Payouts reach households through member-owned channels and mobile money.',s2:'Payouts work where digital channels exist, and lag where they do not.',s3:'Payout delays and exclusions widen the gap for households.'},
+ unossc:{s1:'UNOSSC convenes an alliance that includes SIDS as members and matches demand with partners.',s2:'The alliance convenes partners, but does not reach every region.',s3:'Convening continues with little money, and the alliance has few partners.'},
+ un:{s1:'UN agencies pool country funds and buy cover, with less duplication across offices.',s2:'Pooled UN funds help some countries, while others depend on emergency response.',s3:'Funding moves to emergency response, and prevention falls.'}
+};
+// Limits of this run (from section 6 of the paper's skeleton).
+const LIMITS = [
+ 'Scenarios are not forecasts. None is given a probability.',
+ 'Data on SIDS is thin, and few documented cases use AI-calibrated triggers.',
+ 'The Caribbean, Pacific and AIS differ, and micro-states differ from middle-income states. The model splits SIDS into three playable roles.',
+ 'The two axes and each scenario rest on assumptions. The rules are on the Drivers tab.',
+ 'This is a small-team adaptation, not a full expert workshop. The numbers are placeholders.'
+];
+// Site B behaviour cards: track record 1986-2026 and behaviour under pressure (from the Stakeholder behaviour doc).
+const BEHAV = {
+ car:{record:'Hurricane Ivan (2004) cost Grenada about 200% of GDP. CCRIF began in 2007. Jamaica received US$91.9M within 14 days of Hurricane Melissa (2025).',stress:'Restructured its debt in 2005 and 2015. Now favours pre-arranged cover plus debt clauses.'},
+ pac:{record:'PCRIC founded in 2016 by five countries; about ten members by 2025. Paid Fiji an ex-gratia US$545,000 after Cyclone Vaianu missed the trigger (Apr 2026).',stress:'Accepts discretionary top-ups when a trigger misses. Grows membership one country at a time.'},
+ ais:{record:'No regional risk pool in 40 years. After the 2004 tsunami, Maldives needed budget support. ARC, an African pool, has paid over US$250M since 2014.',stress:'Responds ad hoc after disasters. Little observed pooling.'},
+ mdb:{record:'After the 2004 tsunami, about US$8B was pledged, but US$4B of promised aid was behind schedule. Hurricane clause added by the Paris Club in 2015. ODA fell 23.1% in 2025.',stress:'Pledges fast and delivers slowly. Cuts aid overall, but backs pools (UK: US$25M to the Caribbean pool).'},
+ ins:{record:'After Hurricane Andrew (1992, US$15.5B insured loss) reinsurers left Florida. Prices rose after Ivan and Katrina. Softening since 2025.',stress:'Exits or raises prices after loss clusters. Returns when capital builds up.'},
+ reg:{record:'CDERA created in 1991. CCRIF launched in 2007 with World Bank help. PCRIC founded in 2016. CCRIF now has 30 members and has paid US$390M.',stress:'Built after shocks. Members fund under 10% of CDEMA operating costs.'},
+ lm:{record:'Jamaican credit unions weathered the late-1990s banking crisis better than the big banks. PICAP pays Fiji farmers into bank accounts or e-wallets within two weeks.',stress:'Member-owned institutions survive shocks. Digital payouts work where mobile money exists.'},
+ unossc:{record:'Created inside UNDP in 1974. The 1978 Buenos Aires Plan gave SIDS special attention. The Global Alliance launched on 11 Sep 2026; its first members include no SIDS.',stress:'Convenes rather than funds. Less money means fewer convenings.'},
+ un:{record:'Barbados (1994), Mauritius (2005), SAMOA (2014) and the Antigua and Barbuda Agenda (2024). WFP bought CCRIF cover in Oct 2026.',stress:'Sets agendas through conferences and now buys cover. Budget pressure cuts duplicated programmes.'}
+};
 const DRV_ROLE = {
  haz:'Background: acts in every scenario. The paper treats worsening as near-certain.',
  coop:'Moves axis A, international cooperation.',
@@ -842,12 +1070,59 @@ const DRV_ROLE = {
  inst:'Moves axis B, SIDS agency, and regional pooling.',
  tech:'Moves SIDS data ownership and the protection gap.'
 };
+// No-regret tags for Site B options, so the debrief can count them (categories as in NOREG).
+const B_TAGS = {
+ 'Expand CCRIF into the next layer':'pool','Issue a sovereign cat bond next to CCRIF':'priv',
+ 'Join a shared Pacific–AIS pool':'pool','Build a Pacific trigger model with the SIDS Centre':'data','Rely on donor technical assistance':'cap','Keep the project team on state budget':'cap',
+ 'Add one member state to PCRIC':'pool','Fund a trigger review for the Pacific Resilience Facility':'data',
+ 'Launch the AIS pool with a premium subsidy':'pool','Share data with the Pacific pools':'data','Commission the AIS pool feasibility study':'pool',
+ 'Guarantee the regional reinsurance platform':'pool','Co-finance one pilot pool':'pool',
+ 'Enter SIDS markets with CCRIF-based products':'priv','Offer multi-year reinsurance to the pools':'priv','Co-develop products with SIDS-held data':'data','Expand selectively in the Caribbean':'priv',
+ 'Add new members to CCRIF and PCRIC':'pool','Run a joint training programme for the three regions':'cap',
+ 'Launch a data-sharing pilot between the pools':'data','Expand one product line':'pool',
+ 'Convene an AIS pool feasibility exchange':'pool','Broker a structured interface for private partners':'match','Host a regional data-sharing platform':'data','Share Caribbean lessons with the Pacific':'cap',
+ 'Pool UN country funds into pre-arranged finance':'pool'
+};
+for (const r in B_OPTIONS) for (const k in B_OPTIONS[r]) B_OPTIONS[r][k].forEach(op=>{ if (B_TAGS[op.t]) op.tag = B_TAGS[op.t]; });
+// Action type for each Site B option. Follow-up questions depend on this, not on the option's position.
+const B_ACTS = {
+ 'Expand CCRIF into the next layer':'pool','Take a Global Shield premium subsidy':'partner','Issue a sovereign cat bond next to CCRIF':'private',
+ 'Keep CCRIF cover and top up the reserve':'cover','Buy parametric cover for the highest-risk layer only':'cover','Defer the next renewal and rely on the budget':'wait',
+ 'Cut cover to what the budget can pay':'cut','Borrow to keep premiums paid':'debt','Hold a self-funded reserve instead':'wait',
+ 'Join a shared Pacific–AIS pool':'pool','Offer PCRIC cover through cooperatives':'cover','Build a Pacific trigger model with the SIDS Centre':'data',
+ 'Add one member state to PCRIC':'pool','Fund a trigger review for the Pacific Resilience Facility':'data','Rely on donor technical assistance':'partner',
+ 'Rely on a one-off donor reserve':'partner','Accept a discretionary payment':'wait','Keep the project team on state budget':'status',
+ 'Launch the AIS pool with a premium subsidy':'pool','Join ARC or SEADRIF while the study runs':'cover','Share data with the Pacific pools':'data',
+ 'Commission the AIS pool feasibility study':'study','Buy regional reinsurance individually':'cover','Accept the protection gap while the study runs':'wait',
+ 'Buy cover individually at market price':'cover','Wait for donors to fund a pool':'wait','Borrow for reconstruction after each event':'debt',
+ 'Guarantee the regional reinsurance platform':'pool','Fund micro-state premiums through the Global Shield':'partner','Tie concessional loans to pre-arranged cover':'cover',
+ 'Co-finance one pilot pool':'pool','Keep concessional lines at the current level':'status','Offer a debt swap alongside new lending':'debt',
+ 'Cut concessional lines and shift to loans':'debt','Keep pledges but delay disbursement':'wait','Fund only a small pilot':'cut',
+ 'Enter SIDS markets with CCRIF-based products':'cover','Offer multi-year reinsurance to the pools':'pool','Co-develop products with SIDS-held data':'data',
+ 'Expand selectively in the Caribbean':'cover','Price cover at market rates with standard triggers':'cover','Hold capacity and wait':'wait',
+ 'Withdraw from the smaller SIDS markets':'cut','Raise premiums to market price':'cover','Offer only short-term, tight-trigger cover':'cover',
+ 'Add new members to CCRIF and PCRIC':'pool','Run a joint training programme for the three regions':'partner','Adopt the MVI in member allocation rules':'status',
+ 'Launch a data-sharing pilot between the pools':'data','Hold membership and improve claims handling':'status','Expand one product line':'pool',
+ 'Keep membership but cut services':'cut','Raise member contributions':'cut','Pause new products until funding recovers':'wait',
+ 'Pay households through mobile wallets':'payout','Route payouts through credit unions and cooperatives':'payout','Add diaspora networks as a payment channel':'payout',
+ 'Pay through existing credit unions':'payout','Run a payout pilot in one region':'payout','Delay payouts until verification':'wait',
+ 'Keep the programme but delay payouts':'wait','Pay out only to registered beneficiaries':'cut','Hold cash reserves locally':'status',
+ 'Convene an AIS pool feasibility exchange':'partner','Broker a structured interface for private partners':'partner','Host a regional data-sharing platform':'data',
+ 'Run one convening a year for the AIS study':'partner','Share Caribbean lessons with the Pacific':'partner','Pause brokering until funding returns':'wait',
+ 'Convene less often, with less money':'cut','Broker in kind only':'partner','Fund a pilot with a Global Shield partner':'partner',
+ 'Pool UN country funds into pre-arranged finance':'pool','Coordinate joint programmes across UNDP, UNDRR and OCHA':'partner','Push debt pause clauses in UN debt dialogues':'debt',
+ 'Coordinate existing programmes':'partner','Ring-fence a small anticipatory fund':'cover','Keep current programmes with no new commitment':'status',
+ 'Consolidate offices and cut duplicated programmes':'cut','Shift funding from prevention to emergency response':'wait','Drop monitoring to save money':'cut'
+};
+for (const r in B_OPTIONS) for (const k in B_OPTIONS[r]) B_OPTIONS[r][k].forEach((op,i)=>{ op.act = B_ACTS[op.t] || 'other'; op.k = B_KEYS[r][k][i]; });
+const IMPACT_TXT={s1:'For SIDS in general, access to pre-arranged finance improves. Pooled cover reaches more states, payouts arrive through channels households already use, and national data reduces basis risk. The smallest states still face the sizing paradox.',s2:'For SIDS in general, access depends on the region. Caribbean and Pacific states use pools and fast payouts, while AIS and micro-states remain largely uninsured. Debt absorbs much of each shock.',s3:'For SIDS in general, the protection gap widens. States pay for recovery through borrowing, data stays with external providers, and households receive payouts late or not at all.'};
 const DRIVERS = [
  {id:'haz',name:'Climate hazard and loss',desc:{Likely:'No change in the model. Sea-level rise is locked in, so the trend holds.',Neutral:'Current trend: losses rise, pace uncertain.',Unlikely:'Losses accelerate, with more events above 50% of GDP.'}},
  {id:'coop',name:'SSTrC and international cooperation',desc:{Likely:'Sevilla commitments are delivered and SSTrC is financed.',Neutral:'Commitments made, delivery slow, ODA keeps falling.',Unlikely:'ODA cuts deepen, multilateralism fragments, SSTrC is starved.'}},
  {id:'fin',name:'Finance architecture and private capital',desc:{Likely:'Regional reinsurance platform works; blended finance scales.',Neutral:'Products stay piecemeal; reinsurance short-term and volatile.',Unlikely:'Reinsurers retreat; private capital stays away.'}},
  {id:'inst',name:'Regional institutions and SIDS capacity',desc:{Likely:'AIS pool created; CCRIF and PCRIC grow; MVI shapes allocations.',Neutral:'Pools expand slowly; the AIS has no pool; gaps persist.',Unlikely:'Capacity lost once projects end; pools underfunded.'}},
  {id:'tech',name:'Technology and data',desc:{Likely:'SIDS own their risk data and trigger design.',Neutral:'Data is donor- and MDB-driven; SIDS cannot control triggers.',Unlikely:'Data stays external and opaque; basis risk erodes trust.'}}
+
 ];
 // Each driver gets one setup choice. The choice sets its state in each period (2026-29, 2030-34, 2035-40).
 const DPAT = {
@@ -873,7 +1148,7 @@ const pct = v => (v+R)/(2*R)*100;
 
 class Component extends DCLogic {
   state = this.fresh();
-  fresh(){ return {tab:'sim',screen:'setup',drivers:{haz:'Neutral',coop:'Neutral',fin:'Neutral',inst:'Neutral',tech:'Neutral'},active:Object.fromEntries(ROLES.map(r=>[r.id,false])),round:0,choices:[{},{},{}],resolved:false,vals:{...START},trail:[],result:null,wild:null,wildUsed:{}}; }
+  fresh(){ return {tab:'sim',screen:'setup',drivers:{haz:'Neutral',coop:'Neutral',fin:'Neutral',inst:'Neutral',tech:'Neutral'},active:Object.fromEntries(ROLES.map(r=>[r.id,false])),round:0,choices:[{},{},{}],resolved:false,vals:{...START},trail:[],result:null,wild:null,wildUsed:{},hist:[],showText:false}; }
   apply(v,fx){
     const s = this.props.sensitivity ?? 1, n = {...v};
     for (const k in fx){ n[k] = n[k] + Math.round(fx[k]*s); const lim = (k==='a'||k==='b')?[-R,R]:[0,100]; n[k] = Math.max(lim[0],Math.min(lim[1],n[k])); }
@@ -896,11 +1171,11 @@ class Component extends DCLogic {
     act.forEach(r=>{ v = this.apply(v, this.opts(r.id, st.round)[ch[r.id]].fx); });
     const coal = this.coalsOf(st.round).map(c=>{
       const roles = Object.keys(c.req), missing = roles.filter(id=>!st.active[id]);
-      const ok = !missing.length && roles.every(id=>this.matches(id, st.round, ch[id], c.req[id]));
+      const ok = !missing.length && (SITE !== 'B' || st.vals.trust >= 40) && roles.every(id=>this.matches(id, st.round, ch[id], c.req[id]));
       if (ok) v = this.apply(v, c.fx);
       return {n:c.n,ok,missing,fx:c.fx};
     });
-    this.setState({vals:v,resolved:true,trail:[...st.trail,{a:st.vals.a,b:st.vals.b}],result:{before:st.vals,afterBase,afterDrv,after:v,coal}});
+    this.setState({vals:v,resolved:true,trail:[...st.trail,{a:st.vals.a,b:st.vals.b}],hist:[...(st.hist||[]),{a:v.a,b:v.b}],result:{before:st.vals,afterBase,afterDrv,after:v,coal}});
   }
   next(){
     const st = this.state;
@@ -926,12 +1201,23 @@ class Component extends DCLogic {
   }
   matches(roleId, i, idx, want){
     if (SITE !== 'B') return want.includes(idx);
-    const s = this.stateOf(this.state, PRIMARY[roleId], i);
-    return want.includes(B_KEYS[roleId][s][idx]);
+    const o = this.opts(roleId, i)[idx];
+    return !!o && want.includes(o.k);
+  }
+  prevAct(roleId, i){
+    const c = i > 0 ? this.state.choices[i-1][roleId] : undefined;
+    if (c === undefined) return null;
+    const o = this.opts(roleId, i-1)[c];
+    return o ? o.act : null;
   }
   opts(roleId, i){
     if (SITE !== 'B') return ROUNDS[i].options[roleId];
-    return B_OPTIONS[roleId][this.stateOf(this.state, PRIMARY[roleId], i)];
+    const base = B_OPTIONS[roleId][this.stateOf(this.state, PRIMARY[roleId], i)];
+    const prev = this.prevAct(roleId, i);
+    const fo = prev && FO[roleId] && FO[roleId][i] && FO[roleId][i][prev];
+    if (!fo) return base;
+    const o = {t:fo[0], d:fo[1], fx:fo[2], tag:undefined, act:prev, k:fo[3]};
+    return [o, base[1], base[2]];
   }
   renderVals(){
     const st = this.state, p = this.props;
@@ -943,35 +1229,59 @@ class Component extends DCLogic {
     const decided = act.filter(r=>ch[r.id]!==undefined).length;
     const ready = decided===act.length;
     const steps = ROUNDS.map((r,i)=>{ const cur = st.screen==='play'&&i===st.round, done = st.screen==='debrief'||i<st.round||(i===st.round&&st.resolved);
-      return {years:r.years,title:r.title,bg:cur?'#1c1d1a':done?'#e7e5de':'#fbfaf7',fg:cur?'#f5f4ef':'#1c1d1a'}; });
-    steps.push({years:'2040',title:'Debrief',bg:st.screen==='debrief'?'#1c1d1a':'#fbfaf7',fg:st.screen==='debrief'?'#f5f4ef':'#1c1d1a'});
-    const roleCards = act.map(r=>({name:r.name,interest:r.interest,options:this.opts(r.id, st.round).map((op,i)=>{
-      const sel = ch[r.id]===i, lock = st.resolved;
-      return {t:op.t,d:op.d,fx:fxText(op.fx),showFx,cursor:lock?'default':'pointer',
-        border:sel?'#1c1d1a':'#dcdad2',bg:sel?'#ecebe4':'#ffffff',opacity:lock&&!sel?0.45:1,
-        pick:()=>{ if (this.state.resolved) return; const c = this.state.choices.slice(); c[this.state.round] = {...c[this.state.round],[r.id]:i}; this.setState({choices:c}); }};
-    })}));
+      return {years:r.years,title:r.title,bg:cur?'#00335B':done?'#DCE5EF':'#FFFFFF',fg:cur?'#F4F6F9':'#00335B'}; });
+    steps.push({years:'2040',title:'Debrief',bg:st.screen==='debrief'?'#00335B':'#FFFFFF',fg:st.screen==='debrief'?'#F4F6F9':'#00335B'});
+    const actOf = (rid, i) => { const c = st.choices[i] && st.choices[i][rid]; if (c===undefined) return null; const o = this.opts(rid, i)[c]; return o ? o.act : null; };
+    const roleCardsAll = act.map(r=>{ const dp = 'Decision point '+ROUNDS[st.round].years+': '+DECISION_TR[r.id][st.round]; const lim = 'Resources: '+ROLE_LIMITS[r.id].res+' Red line: '+ROLE_LIMITS[r.id].red; const prev = st.round>0 ? actOf(r.id, st.round-1) : null; const fq = (SITE==='B' && prev && QF[r.id] && QF[r.id][st.round]) ? QF[r.id][st.round][prev] : null; const lk = SITE==='B' ? LINKS.find(L=>L.to===r.id && L.at===st.round && L.acts.includes(actOf(L.from, st.round-1))) : null; return {name:r.name,interest:r.interest,dp,lim,q:fq||QUESTIONS[r.id][st.round],link:lk?lk.text:'',ctx:SITE==='B'?'Options reflect '+DRIVERS.find(d=>d.id===PRIMARY[r.id]).name+': '+this.stateOf(st,PRIMARY[r.id],st.round).toUpperCase()+' this round.':'Options are fixed: the same three choices in every round and pathway.',options:this.opts(r.id, st.round).map((op,i)=>{
+      const lock = st.resolved, reveal = true, sel = ch[r.id]===i;
+      const locked = SITE === 'B' && !st.resolved && st.vals.debt >= 70 && (op.fx.debt||0) > 0;
+      return {t:op.t,d:op.d,fx:fxText(op.fx),showFx:showFx&&reveal,cursor:(lock||locked)?'default':'pointer',
+        border:(reveal&&sel)?'#00335B':'#C9D6E3',bg:(reveal&&sel)?'#E8F1FA':'#ffffff',opacity:(locked||(lock&&!sel))?0.4:1,
+        pick:()=>{ if (this.state.resolved || locked) return; const c = this.state.choices.slice(); c[this.state.round] = {...c[this.state.round],[r.id]:i}; this.setState({choices:c}); }};
+    })};});
     const res = st.result;
     const resultDeltas = res ? KEYS.map(k=>{ const d = res.after[k]-res.before[k], good = INV[k]?d<0:d>0;
-      return {n:NAMES[k],t:(d>0?'+':d<0?'−':'±')+Math.abs(d),c:d===0?'#b9bab3':good?'oklch(0.8 0.09 195)':'oklch(0.78 0.09 30)'}; }) : [];
-    const resultCoalitions = res ? res.coal.map(c=>({n:c.n,mark:c.ok?'●':'○',c:c.ok?'oklch(0.8 0.09 195)':'#8d8f88',note:c.ok?fxText(c.fx):c.missing.length?'not possible, role not in play':'not formed'})) : [];
+      return {n:NAMES[k],t:(d>0?'+':d<0?'−':'±')+Math.abs(d),c:d===0?'#A9BCD0':good?'#7FD4CF':'#F9B57A'}; }) : [];
+    const resultCoalitions = res ? res.coal.map(c=>({n:c.n,mark:c.ok?'●':'○',c:c.ok?'#7FD4CF':'#8497AA',note:c.ok?fxText(c.fx):c.missing.length?'not possible, role not in play':'not formed'})) : [];
     const indicators = KEYS.filter(k=>k!=='a'&&k!=='b').map(k=>{ const v = st.vals[k], d = v-START[k], good = INV[k]?d<0:d>0;
-      return {n:NAMES[k],v,d:d===0?'':(d>0?'+':'−')+Math.abs(d),c:good?TEAL:CORAL,w:v,bar:INV[k]?'#8d8f88':'#1c1d1a'}; });
+      return {n:NAMES[k],v,d:d===0?'':(d>0?'+':'−')+Math.abs(d),c:good?TEAL:CORAL,w:v,bar:INV[k]?'#8497AA':'#00335B'}; });
+    const roleCards = roleCardsAll;
     const counts = {}; ROUNDS.forEach((rd,i)=>act.forEach(r=>{ const c = st.choices[i][r.id]; if (c!==undefined){ const t = this.opts(r.id, i)[c].tag; if (t) counts[t]=(counts[t]||0)+1; } }));
     const W = WILD.find(w=>w.id===st.wild);
+    const reactParts = [];
+    if (SITE === 'B') {
+      if (st.vals.trust < 40) reactParts.push('trust below 40, so linked decisions need the full set of roles to match');
+      if (st.vals.debt >= 70) reactParts.push('debt stress 70 or more, so options that add debt are locked');
+    }
+    const reactLine = SITE !== 'B' ? '' : (reactParts.length ? 'Reactions in force: ' + reactParts.join('; ') + '.' : 'Reactions in force: none.');
+    let signalLine = '';
+    if (SITE === 'B') {
+      if (st.round === 0) signalLine = 'Collective signal: none yet.';
+      else {
+        const pi = st.round - 1, cnt = {};
+        act.forEach(r=>{ const c = st.choices[pi][r.id]; if (c===undefined) return; const k = B_KEYS[r.id][this.stateOf(st, PRIMARY[r.id], pi)][c]; if (k && k!=='none') cnt[k]=(cnt[k]||0)+1; });
+        const ks = Object.keys(cnt);
+        signalLine = 'Collective signal from last round: ' + (ks.length ? ks.map(k=>k+' '+cnt[k]+' role'+(cnt[k]>1?'s':'')).join(' · ') : 'no shared moves') + '.';
+      }
+    }
     const drvSum = {};
     DRIVERS.forEach(d=>{ const e = DFX[d.id][this.stateOf(st, d.id, st.round)]; for (const k in e) drvSum[k] = (drvSum[k]||0) + e[k]; });
     const drvKeys = Object.keys(drvSum).filter(k=>drvSum[k]!==0);
     const drvLine = drvKeys.length ? 'Drivers this period: ' + fxText(Object.fromEntries(drvKeys.map(k=>[k,drvSum[k]]))) : 'Drivers this period: none';
     const diffTxt = (x,y) => { const parts = KEYS.filter(k=>y[k]!==x[k]).map(k=>{ const d = y[k]-x[k]; return SHORT[k]+' '+(d>0?'+':'−')+Math.abs(d); }); return parts.length ? parts.join(' · ') : 'none'; };
     return {
-      roundDrvFx:drvLine, resBaseTxt:res?diffTxt(res.before,res.afterBase):'—', resDrvTxt:res?diffTxt(res.afterBase,res.afterDrv):'—', resDecTxt:res?diffTxt(res.afterDrv,res.after):'—',
-      isGap:st.tab==='gap', isDrv:st.tab==='drv', isSetup:isSim&&st.screen==='setup', isDrvSetup:isSim&&st.screen==='drivers', isBoard:isSim&&(st.screen==='play'||st.screen==='debrief'),
+      roundDrvFx:drvLine, reactLine, signalLine, milestoneLine:MILESTONES[st.round], resBaseTxt:res?diffTxt(res.before,res.afterBase):'—', resDrvTxt:res?diffTxt(res.afterBase,res.afterDrv):'—', resDecTxt:res?diffTxt(res.afterDrv,res.after):'—',
+      showText:!!st.showText, isGap:st.tab==='gap', isDrv:st.tab==='drv', isSetup:isSim&&st.screen==='setup', isDrvSetup:isSim&&st.screen==='drivers', isBoard:isSim&&(st.screen==='play'||st.screen==='debrief'),
       isPlay:st.screen==='play', isDebrief:st.screen==='debrief',
-      tabSimBg:isSim?'#1c1d1a':'transparent', tabSimFg:isSim?'#f5f4ef':'#1c1d1a',
-      tabGapBg:st.tab==='gap'?'#1c1d1a':'transparent', tabGapFg:st.tab==='gap'?'#f5f4ef':'#1c1d1a',
-      tabDrvBg:st.tab==='drv'?'#1c1d1a':'transparent', tabDrvFg:st.tab==='drv'?'#f5f4ef':'#1c1d1a',
+      tabSimBg:isSim?'#00335B':'transparent', tabSimFg:isSim?'#F4F6F9':'#00335B',
+      tabGapBg:st.tab==='gap'?'#00335B':'transparent', tabGapFg:st.tab==='gap'?'#F4F6F9':'#00335B',
+      tabDrvBg:st.tab==='drv'?'#00335B':'transparent', tabDrvFg:st.tab==='drv'?'#F4F6F9':'#00335B',
       toDrv:()=>this.setState({tab:'drv'}),
+      isAnnex:st.tab==='annex', annexDisplay:SITE==='B'?'inline-block':'none', tabAnnexBg:st.tab==='annex'?'#00335B':'transparent', tabAnnexFg:st.tab==='annex'?'#F4F6F9':'#00335B', toAnnex:()=>this.setState({tab:'annex'}),
+      annexRows:SITE!=='B'?[]:ROLES.flatMap(r=>[
+  ...['Likely','Neutral','Unlikely'].flatMap(k=>B_OPTIONS[r.id][k].map(op=>({role:r.name,driver:DRIVERS.find(d=>d.id===PRIMARY[r.id]).name,state:k.toUpperCase(),color:k==='Likely'?TEAL:k==='Unlikely'?CORAL:'#00335B',title:op.t,fx:Object.keys(op.fx).length?fxText(op.fx):'no change',tag:op.tag?({cap:'Capacity building',data:'SIDS-owned data',pool:'Regional pooling',priv:'Private-sector involvement',match:'Global Alliance interface'})[op.tag]:'—'}))),
+  ...[1,2].flatMap(i=>Object.keys(FO[r.id][i]).map(a=>{ const fo=FO[r.id][i][a]; return {role:r.name,driver:'Round '+(i+1)+' · follows a '+a+' move',state:'CONTINUATION',color:'#4A5A6A',title:fo[0],fx:Object.keys(fo[2]).length?fxText(fo[2]):'no change',tag:fo[3]==='pool'?'Regional pooling':fo[3]==='data'?'SIDS-owned data':fo[3]==='rails'?'Last-mile payouts':'—'}; }))
+]),
       toSim:()=>this.setState({tab:'sim'}), toGap:()=>this.setState({tab:'gap'}),
       drvCards:DRIVERS.map(d=>({name:d.name,role:DRV_ROLE[d.id],pos:d.desc.Likely,med:d.desc.Neutral,neg:d.desc.Unlikely})),
       scenCards:[
@@ -980,13 +1290,61 @@ class Component extends DCLogic {
         {n:SCEN.s3.n,t:SCEN.s3.t,c:SCEN.s3.c,rule:'Both axes at or below -7.',cond:'Cooperation and institutions both Unlikely for most of the period.'}
       ],
       activeCount:act.length,
+      roleNarr:ROLES.map(r=>({name:r.name,text:NARR[r.id][classify(st.vals.a,st.vals.b)]})),
+      textHead:'What happened in this run',
+      textLabel:st.showText?'Hide narrative':'Read the run as a narrative',
+      toggleText:()=>this.setState(x=>({showText:!x.showText})),
+      scenParas:(()=>{
+        const cls=classify(st.vals.a,st.vals.b), hist=st.hist||[];
+        const lab={haz:'climate hazard',coop:'international cooperation',fin:'finance architecture',inst:'regional institutions and SIDS capacity',tech:'technology and data'};
+        const MOVE={pool:'pooled risk',cover:'buying cover',study:'studying a pool before committing',data:'national data',partner:'partnership',wait:'waiting for a clearer signal',debt:'borrowing',private:'private capital',status:'the existing arrangements',cut:'cutting back',payout:'direct payouts to households'};
+        const DRV={
+          haz:{Unlikely:'Hazard accelerated, and events above half of GDP became more frequent. Every other choice became more expensive.'},
+          coop:{Likely:'International cooperation rose. Sevilla commitments were delivered, and SSTrC began to finance pools and triangular deals.',Unlikely:'International cooperation fell. ODA cuts deepened, multilateralism fragmented, and SSTrC lost its financing.'},
+          fin:{Likely:'Finance architecture improved. The regional reinsurance platform worked and blended finance began to scale.',Unlikely:'Finance architecture contracted. Reinsurers retreated and private capital stayed away.'},
+          inst:{Likely:'Regional institutions strengthened. Pools grew and the MVI began to shape allocations.',Unlikely:'Regional institutions weakened. Capacity was lost when projects ended, and pools were underfunded.'},
+          tech:{Likely:'Data moved toward SIDS. States began to own their risk data and trigger design.',Unlikely:'Data stayed external and opaque, so basis risk began to erode trust in payouts.'}};
+        const ROLE_ASK={car:'The Caribbean',pac:'The Pacific',ais:'The AIS governments',mdb:'Development banks and donors',ins:'Insurers and reinsurers',reg:'Regional institutions',lm:'Last-mile actors',unossc:'UNOSSC',un:'The UN system'};
+        const out=[];
+        out.push({t:'The run opened in 2026. At setup, the group set the five drivers as follows: '+DRIVERS.map(d=>lab[d.id]+' '+st.drivers[d.id].toLowerCase()).join('; ')+'. In the first period nothing had changed yet, so the first decisions were made under today’s conditions.'});
+        ROUNDS.forEach((rd,i)=>{
+          const parts=[];
+          const movers=DRIVERS.filter(d=>this.stateOf(st,d.id,i)!=='Neutral');
+          movers.forEach(d=>{ const k=this.stateOf(st,d.id,i); const same = i>0 && this.stateOf(st,d.id,i-1)===k; if(same) parts.push(lab[d.id].charAt(0).toUpperCase()+lab[d.id].slice(1)+' stayed '+k.toLowerCase()+' from the period before.'); else if(DRV[d.id][k]) parts.push(DRV[d.id][k]); });
+          if(!movers.length) parts.push('No driver had moved yet, so the period was shaped by the choices alone.');
+          const CH={wait:'had to wait, because the conditions were not yet clear enough to commit.',cut:'had to cut back, because the budget could not carry the cover.',debt:'had to borrow to keep protection in place, which added to its debt.',study:'could only study an option, because the commitment depended on partners who had not yet come in.'};
+          const hard=[];
+          ROLES.forEach(r=>{ const c=st.choices[i]&&st.choices[i][r.id]; if(c===undefined) return; const o=this.opts(r.id,i)[c]; if(!o) return; if(CH[o.act]) hard.push(ROLE_ASK[r.id]+' '+CH[o.act]); const drv=DRIVERS.find(d=>d.id===PRIMARY[r.id]); if(this.stateOf(st,drv.id,i)==='Unlikely') hard.push(ROLE_ASK[r.id]+' faced a worsening '+lab[drv.id]+' context, which made each option harder to choose.'); });
+          if(hard.length) parts.push(hard.slice(0,3).join(' '));
+          const picks=[];
+          ROLES.forEach(r=>{ const c=st.choices[i]&&st.choices[i][r.id]; if(c===undefined) return; const o=this.opts(r.id,i)[c]; if(!o) return; const drv=DRIVERS.find(d=>d.id===PRIMARY[r.id]); const driven=this.stateOf(st,drv.id,i)!=='Neutral'; picks.push(ROLE_ASK[r.id]+' chose “'+o.t+'”, a move towards '+(MOVE[o.act]||'a new step')+(driven?'. The '+lab[drv.id]+' shift made this option available.':'.')); });
+          if(picks.length) parts.push(picks.join(' '));
+          const prev=i>0?hist[i-1]:null;
+          if(prev && prev.a!==undefined){
+            if(i>0){ const pv=hist[i-1]; if(pv.trust!==undefined && pv.trust<40) parts.push('Trust had fallen low enough that joint decisions became harder to form.'); }
+          }
+          const ch=[];
+          if(i>0 && hist[i-1]) ch.push('');
+          out.push({t:rd.years+'. '+rd.title+'. '+parts.join(' ')});
+        });
+        const wild=WILD.filter(w=>(st.wildUsed||{})[w.id]).map(w=>w.n);
+        if(wild.length) out.push({t:'A shock also hit during the run: '+wild.join('; ')+'. Such events test whether the choices made before them hold up.'});
+        const movedDrivers=DRIVERS.filter(d=>['Likely','Unlikely'].includes(st.drivers[d.id]));
+        out.push({t:'Taken together, the drivers that moved most were '+(movedDrivers.length?movedDrivers.map(d=>lab[d.id]).join(', '):'none; every driver stayed on its current trend')+'. Those movements framed each decision, and the roles then chose within that frame.'});
+        const ends={s1:'the system adapted and pooled cover reached more of SIDS.',s2:'the region advanced unevenly, and the smallest states were left behind.',s3:'shocks went uncovered, and the states paid for them with borrowing.'};
+        out.push({t:'By 2040 the run reached '+SCEN[cls].n+': '+ends[cls]});
+        out.push({t:IMPACT_TXT[cls]});
+        return out;
+      })(),
+      timelineRows:ROUNDS.map((rd,i)=>{ const h=(st.hist||[])[i]; if(!h) return null; const prevScen = i>0 && (st.hist||[])[i-1] ? SCEN[classify((st.hist||[])[i-1].a,(st.hist||[])[i-1].b)].n : null; const scen = SCEN[classify(h.a,h.b)].n; const short={haz:'Hazard',coop:'Cooperation',fin:'Finance',inst:'Institutions',tech:'Data'}; return {label:rd.years+' · '+rd.title, drivers:DRIVERS.map(d=>short[d.id]+' '+this.stateOf(st,d.id,i).toUpperCase()).join(' · '), pos:'A '+h.a+' · B '+h.b, scen, turn: prevScen && prevScen!==scen ? 'Turning point: from '+prevScen : (i>0 ? 'No change' : 'Start')}; }).filter(x=>x),
+      limits:LIMITS,
       drvSetup:DRIVERS.map(d=>{ const cur = st.drivers[d.id];
-        const mk = k => ({label:k.toUpperCase(), desc:d.desc[k], color:k==='Likely'?TEAL:k==='Unlikely'?CORAL:'#1c1d1a', bg:cur===k?'#ffffff':'#f5f4ef', border:cur===k?'#1c1d1a':'#dcdad2', shadow:cur===k?'0 0 0 3px oklch(0.52 0.09 195)':'none', pick:()=>this.setState(x=>({drivers:{...x.drivers,[d.id]:k}}))});
+        const mk = k => ({label:k.toUpperCase(), desc:d.desc[k], color:k==='Likely'?TEAL:k==='Unlikely'?CORAL:'#00335B', bg:cur===k?'#ffffff':'#F4F6F9', border:cur===k?'#00335B':'#C9D6E3', shadow:cur===k?'0 0 0 3px #00A19B':'none', pick:()=>this.setState(x=>({drivers:{...x.drivers,[d.id]:k}}))});
         return {name:d.name, role:DRV_ROLE[d.id], a:mk('Likely'), b:mk('Neutral'), c:mk('Unlikely')}; }),
-      driverCards:DRIVERS.map(d=>{ const s = this.stateOf(st, d.id, st.round); const e = DFX[d.id][s], fx = Object.keys(e).length ? 'Adds to this round: '+fxText(e) : 'No effect this round'; return {name:d.name,state:s.toUpperCase(),desc:d.desc[s],fx,color:s==='Likely'?TEAL:s==='Unlikely'?CORAL:'#1c1d1a'}; }),
-      beginBg:act.length?'#1c1d1a':'#c9c7be',
+      driverCards:DRIVERS.map(d=>{ const s = this.stateOf(st, d.id, st.round); const e = DFX[d.id][s], fx = Object.keys(e).length ? 'Adds to this round: '+fxText(e) : 'No effect this round'; return {name:d.name,state:s.toUpperCase(),desc:d.desc[s],fx,color:s==='Likely'?TEAL:s==='Unlikely'?CORAL:'#00335B'}; }),
+      beginBg:act.length?'#00335B':'#B8C7D6',
       beginCursor:act.length?'pointer':'not-allowed',
-      roleToggles:ROLES.map(r=>({name:r.name,desc:r.desc,state:st.active[r.id]?'IN PLAY':'OUT',border:st.active[r.id]?'#1c1d1a':'#dcdad2',bg:st.active[r.id]?'#ffffff':'#fbfaf7',shadow:st.active[r.id]?'0 0 0 3px oklch(0.52 0.09 195)':'none',
+      roleToggles:ROLES.map(r=>({name:r.name,desc:r.desc,state:st.active[r.id]?'IN PLAY':'OUT',border:st.active[r.id]?'#00335B':'#C9D6E3',bg:st.active[r.id]?'#ffffff':'#FFFFFF',shadow:st.active[r.id]?'0 0 0 3px #00A19B':'none',
         toggle:()=>this.setState(s=>({active:{...s.active,[r.id]:!s.active[r.id]}}))})),
       goDrivers:()=>{ if (!act.length) return; this.setState({screen:'drivers'}); },
       backSetup:()=>this.setState({screen:'setup'}),
@@ -994,13 +1352,13 @@ class Component extends DCLogic {
       roundSteps:steps, roundNum:st.round+1, roundYears:Rd.years, roundTitle:Rd.title, roundBrief:Rd.brief, roundBase:Rd.baseNote, roundSignposts:Rd.signposts,
       showHints:hints, coalitionHints:this.coalsOf(st.round).map(c=>({n:c.n,who:Object.keys(c.req).map(roleName).join(' + ')})),
       roleCards, decidedCount:decided, resolved:st.resolved, notResolved:!st.resolved,
-      resolveBg:ready?'#1c1d1a':'#a3a59e', resolveNote:ready?'All roles have decided.':'Waiting on '+(act.length-decided)+' role'+(act.length-decided===1?'':'s')+'.',
+      resolveBg:ready?'#00335B':'#a3a59e', resolveNote:ready?'All roles have decided.':'Waiting on '+(act.length-decided)+' role'+(act.length-decided===1?'':'s')+'.',
       resolve:()=>this.resolve(), next:()=>this.next(), nextLabel:st.round>=ROUNDS.length-1?'Go to 2040 debrief':'Begin round '+(st.round+2)+' · '+ROUNDS[Math.min(st.round+1,2)].years,
       resultDeltas, resultCoalitions, trendName:sc.n,
       trail:st.trail.map(t=>({x:pct(t.a),y:100-pct(t.b)})), dotX:pct(st.vals.a), dotY:100-pct(st.vals.b),
       posText:'A '+(st.vals.a>0?'+':'')+st.vals.a+' · B '+(st.vals.b>0?'+':'')+st.vals.b,
       indicators,
-      wildButtons:WILD.map(w=>({n:w.n,s:st.wildUsed[w.id]?'USED':'INJECT',bg:st.wildUsed[w.id]?'#ecebe4':'#ffffff',fg:'#1c1d1a',cursor:'pointer',fire:()=>this.fire(w)})),
+      wildButtons:WILD.map(w=>({n:w.n,s:st.wildUsed[w.id]?'USED':'INJECT',bg:st.wildUsed[w.id]?'#E8F1FA':'#ffffff',fg:'#00335B',cursor:'pointer',fire:()=>this.fire(w)})),
       showWild:!!W, wildName:W?W.n:'', wildText:W?W.text:'', wildPrompts:W?W.prompts:[], wildFx:W?fxText(W.fx):'', closeWild:()=>this.setState({wild:null}),
       outName:sc.n, outText:sc.t, outColor:sc.c,
       noRegret:NOREG.map(x=>({n:x.n,t:counts[x.tag]?counts[x.tag]+'×':'not made',c:counts[x.tag]?TEAL:CORAL})),

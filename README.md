@@ -1,310 +1,288 @@
-# Financing Resilience Toward 2040 — Multi-stakeholder foresight simulation
+# Financing Resilience Toward 2040: foresight simulation
 
-## 1. Overview
+A facilitated, turn-based exercise for the foresight paper *Financing Resilience Toward 2040: Alternate Futures for SIDS Disaster-Risk Financing and South-South & Triangular Cooperation*. A facilitator runs it on one shared screen with up to nine stakeholder roles. The exercise has three periods (2026–2029, 2030–2034, 2035–2040), a briefing per round, and a 2040 debrief.
 
-A facilitated, turn-based exercise based on the foresight paper *Financing Resilience Toward 2040: Alternate Futures for SIDS Disaster-Risk Financing and South-South & Triangular Cooperation* (source PDF: `uploads/Nov. 18th Agenda-Practicum.pdf`). Up to nine stakeholder roles each make one decision per round across three periods (2026–2029, 2030–2034, 2035–2040). Their choices move the paper's two critical uncertainties, international cooperation (axis A) and SIDS agency (axis B), plus seven outcome indicators. The final position on the two axes sets which 2040 scenario arrives. The exercise is meant to show how decisions by different actors, especially joint ones, push the system toward Cooperative Resilience, Fragmented Patchwork or Retrenchment and Exposure. A second tab holds a written gap analysis of the paper.
+**Status: prototype.** Options, effect sizes and starting values are placeholders. Nothing in the model has been calibrated or validated with the team.
 
-**All decision options, effect sizes, starting values and role interests are placeholders written for the prototype.** None come from data. See section 5.
+## 1. What the simulator does
 
-## 2. Quick start
+- **Setup.** The facilitator picks the roles in play, then presses Next to the drivers screen and sets one state per driver of change (Likely, Neutral or Unlikely). Begin round 1 starts the game.
+- **Each round.** The briefing shows each driver's state, the background trend, the effect each driver adds this round, the reactions in force, the collective signal from the previous round, and the milestones of the period. Each role card shows its interest, its resources and red line, its decision point with the trade-off, the driver that shapes its options, a decision question, and three options. On Site B, each card also shows the role's track record and its behaviour under pressure.
+- **Resolve.** The round's effects are applied: background trend, then drivers, then each role's option, then linked decisions. The result panel splits the change into background trend, drivers and decisions.
+- **2040 debrief.** The final position on the two axes sets the scenario. The debrief shows the scenario reached, the no-regret moves, the decision log, the timeline of the run, the ESB recommendations tested against the scenario, a statement for each role, the limits of the run, and a narrative that can be opened with a button.
 
-The project is one HTML file plus a runtime script. There is no `index.html` and no build step.
+The two axes are international cooperation (A) and SIDS agency (B). Seven indicators are tracked: protection gap, last-mile reach, debt stress, SIDS data ownership, pre-arranged finance share, regional pooling and coalition trust.
+
+## 2. Two sites from one code base
+
+The two sites share all code. They differ only in one constant, `const SITE`.
+
+| File | `SITE` | What changes |
+|---|---|---|
+| `Resilience 2040 Simulation.dc.html` | `'A'` | Fixed options for every round and driver state. Linked decisions match by option position. No continuations, follow-up questions, reactions, track records or effects annex. |
+| `Resilience 2040 Simulation - Site B.dc.html` | `'B'` | Options depend on each driver's state. Continuations, follow-up questions, direct links, reactions, track records, the effects annex. |
+
+Whenever the shared code changes, regenerate Site B from Site A by replacing `const SITE = 'A';` with `const SITE = 'B';`. Do this as the last step of every change, so the two files stay identical except for that line.
+
+## 3. Quick start
+
+Serve the folder with a local server. Opening the HTML file directly is not supported.
 
 ```bash
 # from the project folder
-npx serve .
-# or
 python3 -m http.server 8000
 ```
 
-Then open `http://localhost:3000/Resilience%202040%20Simulation.dc.html` (or port 8000 for Python). In VS Code you can also right-click the file → **Open with Live Server**.
+Then open:
 
-Opening the file directly (double-click, `file://`) has not been tested; a local server is the safer option.
+- Site A: `http://localhost:8000/Resilience%202040%20Simulation.dc.html`
+- Site B: `http://localhost:8000/Resilience%202040%20Simulation%20-%20Site%20B.dc.html`
 
-**External dependencies (internet connection required; it does not work offline):**
+**External dependencies (internet connection required):**
 
 | Dependency | Loaded by | Purpose |
 |---|---|---|
-| `support.js` (local, generated) | `<script src="./support.js">` in `<head>` | Runtime that reads the template and logic in the HTML file and renders them with React. Header says "GENERATED … do not edit". |
-| React 18.3.1 + ReactDOM 18.3.1 (unpkg CDN) | `support.js` | Rendering |
-| Babel standalone 7.29.0 (unpkg CDN) | `support.js` | Transpiles code at runtime |
-| IBM Plex Sans + IBM Plex Mono (Google Fonts) | `<helmet>` in the HTML file | Typography; falls back to Helvetica / monospace |
+| `support.js` (local, generated) | `<script src="./support.js">` | Runtime that renders the template and logic in the HTML file. Do not edit. |
+| React 18.3.1 and ReactDOM 18.3.1 (unpkg) | `support.js` | Rendering |
+| Babel standalone 7.29.0 (unpkg) | `support.js` | Transpiles code at runtime |
+| IBM Plex Sans and IBM Plex Mono | `fonts/` (local, `woff2`) | Typography |
 
-To run offline you would need to download those CDN files and fonts and point `support.js` and the `<link>` at local copies. That has not been done.
-
-## 3. Project structure
+## 4. Files
 
 ```
 .
-├── Resilience 2040 Simulation.dc.html   ← the whole simulation (511 lines)
-├── support.js                            ← generated runtime (do not edit)
-├── uploads/
-│   └── Nov. 18th Agenda-Practicum.pdf    ← source foresight paper
+├── Resilience 2040 Simulation.dc.html          ← Site A (fixed decisions)
+├── Resilience 2040 Simulation - Site B.dc.html ← Site B (decisions by driver state)
+├── support.js                                  ← generated runtime (do not edit)
+├── fonts/                                      ← 18 IBM Plex woff2 files
 └── README.md
 ```
 
-### Inside `Resilience 2040 Simulation.dc.html`
+The source paper (`Nov. 18th Agenda-Practicum.docx`) and the evidence brief (`SSTrC_Evidence & Solutions Brief_revised.docx`) are not in this folder.
 
-The file is a "Design Component": the page layout sits inside `<x-dc>…</x-dc>`, uses `{{ name }}` placeholders for live values, and every style is written inline (there is no stylesheet). The logic sits in one `<script data-dc-script>` block at the bottom.
+## 5. Parameters
 
-| Lines (approx.) | Section |
-|---|---|
-| 1–9 | Document head; loads `support.js` |
-| 10–14 | `<helmet>`: Google Fonts link and the only CSS rules (body reset, link colours) |
-| 16–25 | Header: title and the two tabs (Simulation / Paper gap analysis) |
-| 27–77 | **Gap analysis tab** — hard-coded text in three columns: Missing (10), Needs improvement (8), To add (8) |
-| 79–115 | **Setup screen** — research question, "Each round" steps, role toggles, Begin button |
-| 117–314 | **Game board** (shown during play and debrief) |
-| 120–127 | Round progress bar (3 rounds + Debrief) |
-| 129–142 | Wildcard panel |
-| 144–224 | Play view: round briefing (146–168), round result panel (170–196), stakeholder decision cards (197–216), Resolve button (217–222) |
-| 226–263 | Debrief view: 2040 outcome, no-regret moves, debrief questions, decision log, Run again |
-| 266–312 | Sidebar: scenario-space plot, indicator bars, facilitator wildcard buttons |
-| 317 | `<script data-dc-script data-props="…">` — the 4 settings (section 4) are declared in the `data-props` attribute |
-| 318–324 | Model constants: `R`, `TH`, `KEYS`, `SHORT`, `NAMES`, `INV`, `START`, colours |
-| 325–335 | `ROLES` — the nine roles |
-| 336 | `o()` helper for writing options |
-| 337–395 | `ROUNDS` — briefings, background trends, signposts, linked decisions and all 81 options (round 1: 337–356, round 2: 357–375, round 3: 376–395) |
-| 396–400 | `WILD` — three wildcards |
-| 401–405 | `SCEN` — the three end states from the paper |
-| 408 | `NOREG` — the five no-regret move categories |
-| 409–412 | Helpers: `roleName`, `fxText`, `classify`, `pct` |
-| 414–509 | `class Component` — state, the round engine, and `renderVals()`, which prepares every value the layout shows |
-
-### Recommended split
-
-The current format only works with `support.js`. Two options:
-
-**A. Keep the format, move the content out (low effort, recommended first).** Put the content tables in a separate file so researchers can edit scenarios without touching the logic:
-
-```
-data/roles.js        ROLES
-data/rounds.js       ROUNDS (briefings, options, linked decisions)
-data/wildcards.js    WILD
-data/scenarios.js    SCEN, NOREG
-data/model.js        R, TH, START, KEYS, NAMES, SHORT, INV
-```
-
-Load them from the logic class with dynamic `import()` (or switch to JSON plus `fetch`). This has not been tried in this project, so test it first.
-
-**B. Port to a standard web app.** `index.html` (markup), `styles.css` (move the repeated inline colours and fonts into CSS variables), `data.js` (as above), `sim.js` (pure functions: `apply`, `resolveRound`, `classify` — no UI code), `ui.js` (rendering). This makes the model testable on its own but means rewriting the template.
-
-## 4. Model & logic
-
-### Core entities
-
-| Name | What it is |
-|---|---|
-| `ROLES` | 9 roles: `car` Caribbean SIDS, `pac` Pacific SIDS, `ais` AIS governments, `mdb` development banks & donors, `ins` insurers & reinsurers, `reg` regional institutions, `lm` last-mile actors, `unossc` UNOSSC, `un` UN system (other offices). Each has `name`, `desc`, `interest`. |
-| `ROUNDS[i]` | One per period: `years`, `title`, `brief`, `base` (background trend applied every round), `baseNote`, `signposts` (3 labels), `coalitions` (3 linked decisions), `options` (3 per role). |
-| Option `{t, d, fx, tag}` | Title, description, effects object (e.g. `{a:1, pre:6, debt:-3}`), optional no-regret tag (`cap`, `data`, `pool`, `priv`, `match`). |
-| Coalition `{n, req, fx}` | Linked decision. `req` maps role id → list of option **indices** (0-based) that count. If every required role picked one of those options, `fx` is applied. |
-| `WILD` | 3 wildcards: `habit` island habitability, `unfin` UN financing withdrawn, `partners` partnerships reconfigure. Each has `fx`, `text`, `prompts`. |
-| `SCEN` | 3 end states: `s1` Cooperative Resilience, `s2` Fragmented Patchwork, `s3` Retrenchment and Exposure. Each has name, colour, description and debrief questions. |
-
-### State (what changes during a session)
-
-| Field | Meaning |
-|---|---|
-| `tab` | `'sim'` or `'gap'` |
-| `screen` | `'setup'`, `'play'` or `'debrief'` |
-| `active` | Which roles are in play (`{car:true, …}`) |
-| `round` | 0, 1 or 2 |
-| `choices` | `[{roleId: optionIndex}, …]`, one object per round |
-| `resolved` | Whether the current round has been resolved |
-| `vals` | Current values of the 2 axes and 7 indicators |
-| `trail` | Earlier axis positions (grey dots on the plot) |
-| `result` | Snapshot for the result panel: `before`, `after`, coalition outcomes |
-| `wild` / `wildUsed` | Wildcard currently shown / which have fired |
-
-### Tracked variables
-
-| Key | Name | Start | Range | Better when |
-|---|---|---|---|---|
-| `a` | Cooperation (A) | −2 | −25 to 25 | higher |
-| `b` | SIDS agency (B) | −2 | −25 to 25 | higher |
-| `gap` | Protection gap | 60 | 0–100 | lower |
-| `reach` | Last-mile reach | 30 | 0–100 | higher |
-| `debt` | Debt stress | 58 | 0–100 | lower |
-| `data` | SIDS data ownership | 25 | 0–100 | higher |
-| `pre` | Pre-arranged finance share | 20 | 0–100 | higher |
-| `pool` | Regional pooling | 35 | 0–100 | higher |
-| `trust` | Coalition trust | 50 | 0–100 | higher |
-
-The indicators are unitless 0–100 scores, not percentages or dollars, and the starting values are invented.
-
-### Parameters
-
-The four settings are declared in `data-props` (line 317). They can be changed in the Tweaks panel of the tool this was built in. **When run on its own (e.g. from VS Code) there is no panel, so the defaults apply**; to change one, edit the fallback in the code (e.g. `this.props.sensitivity ?? 1`).
+The four settings are declared in the `data-props` attribute of the script block. In the original tool they could be changed in a Tweaks panel. When the file runs on its own there is no panel, so the defaults apply. To change one, edit the fallback in the code (for example `this.props.sensitivity ?? 1`).
 
 | Name | Default | Range | Effect |
 |---|---|---|---|
 | `showEffects` | `false` | true/false | Shows each option's numeric effects on its button |
 | `showCoalitionHints` | `false` | true/false | Lists this round's linked decisions and the roles they need in the briefing |
 | `sensitivity` | `1` | 0.5–2, step 0.25 | Multiplies every effect before rounding |
-| `autoWildcard` | `'Off'` | Off / Round 2 / Round 3 | Fires the island-habitability wildcard automatically when that round starts |
+| `autoWildcard` | `'Off'` | Off / Round 2 / Round 3 | Fires the island-habitability wildcard when that round starts |
 | `R` (constant) | `25` | — | Axis limit (±25) |
 | `TH` (constant) | `7` | — | Distance from centre on both axes needed to reach a corner scenario |
 
-### Step function — order of operations (`resolve()`)
+## 6. Data and evidence
 
-1. Stop if any active role has not chosen.
-2. Apply the round's background trend (`base`).
-3. Apply each active role's chosen option, in `ROLES` order.
-4. Check each linked decision in order; apply its effects if all required roles chose a qualifying option.
-5. Save the result snapshot, add the previous position to the trail, and lock the round.
+The numbers in the model are placeholders. The text refers to real frameworks and institutions, and each should be checked against the paper and primary sources before use:
 
-`next()` moves to the next round (and fires the auto-wildcard if set) or, after round 3, to the debrief.
-
-### Formulas and assumptions, in plain language
-
-- **Additive model.** Every effect is added to the current value; nothing interacts. For each effect: `new = old + round(effect × sensitivity)`, then clipped to its range (±25 for axes, 0–100 for indicators).
-- **Background trends** are fixed and the same in every session: round 1 cooperation −2, gap +2; round 2 cooperation −1, agency −1, gap +3, debt +3; round 3 cooperation −1, gap +3. With no action, the system drifts toward Retrenchment.
-- **Scenario classification** (`classify`): A ≥ 7 and B ≥ 7 → Cooperative Resilience; A ≤ −7 and B ≤ −7 → Retrenchment and Exposure; **anything else** → Fragmented Patchwork. So Fragmented Patchwork covers the two off-diagonal corners (high A with low B, and low A with high B) as well as the cross-shaped middle. The paper's “mixed” middle is treated as one scenario.
-- **Indicators do not affect the scenario.** Only A and B decide the outcome. Debt, gap and so on are reported but have no feedback effect.
-- **No-regret count**: each chosen option with a tag adds 1 to that category. Which options got which tag was my judgement, not validated.
-- **Wildcards** apply their effects once, immediately, whenever the facilitator clicks.
-
-### Randomness
-
-None. The model is fully deterministic: the same choices always give the same result. No random numbers or seeds are used.
-
-## 5. Data
-
-There are **no datasets** in the code. All numbers (starting values, effects, thresholds) are illustrative placeholders, and there are no comments citing sources.
-
-The text references real frameworks and institutions, which should be checked against the paper and primary sources before use:
-
-- Compromiso de Sevilla, paras 17 and 32(e)–(f) (round 1 briefing)
+- Compromiso de Sevilla, paragraphs 17 and 32(e)–(f) (round 1 briefing)
 - COP31 outcomes (round 1)
 - Antigua and Barbuda Agenda for SIDS, period ending 2034 (round 2)
 - Loss and Damage Fund (round 2)
-- CCRIF, PCRIC, Pacific Resilience Facility, SIDS Centre of Excellence (roles and options)
-- Multidimensional Vulnerability Index (MVI) — the model assumes it shapes concessional terms
-- "Four ESB recommendations" (debrief question) — taken from the paper, not defined in the code
+- CCRIF, PCRIC, the Pacific Resilience Facility and the SIDS Centre of Excellence (roles and options)
+- The Multidimensional Vulnerability Index (MVI): the model assumes it shapes concessional terms, which the paper leaves open
+- The four ESB recommendations (a debrief question): taken from the brief, not defined in the code
 
-Scenario names, the two axes, the three wildcards and the no-regret categories follow the paper. The two off-diagonal corners are folded into Fragmented Patchwork in the prototype; whether they deserve their own scenario is an open decision for the team.
+Scenario names, the two axes, the three wildcards and the no-regret categories follow the paper. The two off-diagonal corners are a prototype choice.
 
-## 6. UI & interaction
+## 7. Model
 
-There is no URL routing; screens switch based on state (`tab`, `screen`). Refreshing the page resets everything; nothing is saved.
+### Drivers and states
 
-| View | Controls | Bound to |
-|---|---|---|
-| Header tabs | Simulation / Paper gap analysis | `tab` |
-| Setup | Role cards (click toggles in/out); **Begin round 1** | `active`; `screen → 'play'` |
-| Play: briefing | Read-only: brief, background trend, signposts, optional linked-decision hints | `ROUNDS[round]` |
-| Play: role cards | Click one option per role (locked after resolve) | `choices[round]` |
-| Play: Resolve | Enabled-looking once all roles decide; does nothing until then | `resolve()` |
-| Play: result panel | Change in all 9 variables this round; linked decisions formed (●) or not (○); Next button | `result` |
-| Sidebar plot | 2×2 scenario space; black dot = current position, grey dots = history; shaded corners = Cooperative Resilience (top right) and Retrenchment (bottom left); everything else is Fragmented Patchwork (64% = threshold 7) | `vals.a`, `vals.b`, `trail` |
-| Sidebar indicators | Bar width = value (0–100); coloured change since start (teal good, coral bad) | `vals`, `START` |
-| Sidebar wildcards | Inject buttons (marked USED after firing; clicking again only reopens the panel); Reset simulation | `fire()`, `restart()` |
-| Wildcard panel | Description, effects, discussion prompts; Back to the round | `wild` |
-| Debrief | Outcome scenario, no-regret counts, debrief questions (2 scenario-specific + 3 general), decision log; Run again | `classify(vals)`, `choices` |
+Five drivers come from section 3 of the paper: climate hazard and loss; SSTrC and international cooperation; finance architecture and private capital; regional institutions and SIDS capacity; technology and data. Each has three states, named by likelihood of the favourable trajectory for SIDS:
 
-Charts are plain positioned boxes, not a charting library.
+- **Likely:** the favourable trajectory.
+- **Neutral:** today's trend.
+- **Unlikely:** the adverse trajectory.
 
-## 7. Key functions reference
+At setup, each driver gets one choice. The choice sets its state for each period (`DPAT` in the code):
 
-All in the `<script data-dc-script>` block.
-
-| Function | Purpose | Inputs → outputs | Line |
+| Choice | 2026–2029 | 2030–2034 | 2035–2040 |
 |---|---|---|---|
-| `o(t,d,fx,tag)` | Shorthand to write an option | strings, effects, tag → option object | 336 |
-| `roleName(id)` | Look up a role's display name | role id → name | 409 |
-| `fxText(fx)` | Format effects for display | `{a:1,debt:-3}` → `"Cooperation +1 · Debt −3"` | 410 |
-| `classify(a,b)` | Decide the scenario | axis values → `'s1' \| 's2' \| 's3'` | 411 |
-| `pct(v)` | Axis value to plot position | −25…25 → 0…100 (%) | 412 |
-| `fresh()` | Initial state | — → state object | 415 |
-| `apply(v,fx)` | Add effects with sensitivity and clipping | values, effects → new values | 417 |
-| `autoWild(round,st)` | Auto-fire habitability wildcard | round index, state → partial state (or `{}`) | 422 |
-| `resolve()` | Resolve the current round (section 4) | state → updates `vals`, `result`, `trail`, `resolved` | 428 |
-| `next()` | Next round or debrief | state → updates `round` / `screen` | 442 |
-| `fire(w)` | Inject a wildcard | wildcard → updates `vals`, `wild`, `wildUsed`, `trail` | 448 |
-| `renderVals()` | Compute every value and click handler the layout shows | state + settings → object of display values | 453 |
-| `start`, `toggle`, `pick`, `restart`, `closeWild`, `toSim`, `toGap` | Click handlers defined inside `renderVals()` | click → `setState` | 453–508 |
+| Likely (cooperation, finance, institutions, data) | Neutral | Likely | Likely |
+| Neutral | Neutral | Neutral | Neutral |
+| Unlikely (cooperation, finance, institutions, data) | Neutral | Unlikely | Unlikely |
+| Hazard, Likely | Neutral | Neutral | Neutral |
+| Hazard, Unlikely | Neutral | Neutral | Unlikely |
 
-## 8. Design system
+Hazard has no Likely effect in the model because the paper treats sea-level rise as locked in. The evidence for these choices is in the Stakeholder behaviour document (section 16).
 
-There are **no CSS variables**. All colours and fonts are typed directly into inline styles and repeated.
+Each state adds fixed placeholder effects to the round (`DFX`). Neutral adds nothing.
 
-| Colour | Use |
+### Scenarios
+
+The final position on the two axes sets the scenario:
+
+- **Cooperative Resilience:** both axes at or above +7.
+- **Retrenchment and Exposure:** both axes at or below −7.
+- **Fragmented Patchwork:** everything else. This includes the two off-diagonal corners, which the paper does not describe. Whether they deserve their own scenario is an open decision for the team.
+
+### Reactions (Site B only)
+
+- **Trust below 40:** linked decisions that need several roles are blocked.
+- **Debt stress 70 or more:** options that add debt are locked.
+
+These are checked against the values at the start of each round.
+
+### Linked decisions
+
+A linked decision forms when every required role chose a qualifying option. On Site A, qualifying means the option's position. On Site B, it means the option's coalition key, so the decision still forms when an option changes with the driver state. Linked decisions give a fixed effect when they form.
+
+### Site B: decisions
+
+- **Options by driver state.** Each role has three options for each state of its primary driver. The Neutral state uses the Neutral set.
+- **Continuations (rounds 2 and 3).** The first option of a role follows its own previous action (for example, a pool move leads to a pool continuation). The continuation replaces the first state option. The other two options still depend on the driver state.
+- **Follow-up questions (rounds 2 and 3).** Each role's question depends on its own previous action.
+- **Direct links.** A small set of role pairs react to each other: the role on the target side sees one extra line only when the source role took the relevant action. Other roles do not react.
+- **Hidden choices.** None. The facilitator sees each choice as it is made, and the effects are applied at Resolve.
+
+## 8. Key functions
+
+All in the `<script data-dc-script>` block. The table covers the functions of the original and the ones added for the two sites (the last six rows).
+
+| Function | Purpose |
 |---|---|
-| `#f5f4ef` | Page background |
-| `#fbfaf7` | Cards / panels |
-| `#1c1d1a` | Text, primary buttons, selected states, dark result panel |
-| `#5b5d57` | Secondary text |
-| `#dcdad2`, `#e7e5de`, `#c9c7be` | Borders and dividers |
-| `oklch(0.52 0.09 195)` teal (`TEAL`) | Cooperative Resilience; "improved" changes |
-| `oklch(0.55 0.09 75)` amber (`AMBER`) | Fragmented Patchwork |
-| `oklch(0.52 0.09 30)` coral (`CORAL`) | Retrenchment; "worsened" changes; wildcard panel border |
-| `#8d8f88` | Trail dots; bars for "lower is better" indicators (gap, debt) |
+| `o(t, d, fx, tag)` | Shorthand to write an option |
+| `roleName(id)` | Looks up a role's display name |
+| `fxText(fx)` | Formats effects for display, for example `Cooperation +1 · Debt −3` |
+| `classify(a, b)` | Decides the scenario: `'s1'`, `'s2'` or `'s3'` |
+| `pct(v)` | Converts an axis value (−25…25) to a plot position (0–100%) |
+| `fresh()` | Initial state (also used by Reset) |
+| `apply(v, fx)` | Adds effects with sensitivity and clipping |
+| `autoWild(round, st)` | Fires the habitability wildcard automatically, if set |
+| `resolve()` | Resolves the current round: background, drivers, options, linked decisions |
+| `next()` | Moves to the next round, or to the debrief |
+| `fire(w)` | Injects a wildcard. A used wildcard is undone when clicked again (`unfire`) |
+| `stateOf(st, id, i)` | Returns a driver's state in a given round |
+| `opts(roleId, i)` | Returns a role's three options for a round (Site B: state, continuation) |
+| `prevAct(roleId, i)` | Returns the action type of a role's previous round |
+| `coalsOf(i)` | Returns the linked decisions for a round |
+| `matches(roleId, i, idx, want)` | Checks whether a chosen option matches a linked decision's key |
+| `renderVals()` | Computes every value the layout shows, and the click handlers |
 
-Fonts: **IBM Plex Sans** (body, 400/500/600) and **IBM Plex Mono** (labels, numbers, 400/500).
+## 9. Screens and interaction
 
-## 9. Known limitations & bugs
+| Screen | Controls | Bound to |
+|---|---|---|
+| Header tabs | Simulation, Drivers, Effects annex (Site B only), Paper gap analysis | `tab` |
+| Setup (roles) | Role cards (click to toggle in or out); Next · choose drivers (needs one role) | `active`; `screen → 'drivers'` |
+| Drivers of change | Five driver cards, each with three states and their descriptions; Back to roles; Begin round 1 | `drivers`; `screen → 'play'` |
+| Play: briefing | Read-only: title, brief, drivers and their effect this round, background trend, reactions, collective signal, milestones, signposts | `ROUNDS[round]`, `drivers` |
+| Play: role cards | Click one option per role; decision question and decision point on each card | `choices[round]` |
+| Play: Resolve | Enabled once every role has decided | `resolve()` |
+| Play: result panel | Change split into background trend, drivers and decisions; linked decisions formed or not | `result` |
+| Sidebar: plot | 2×2 scenario space; dot = current position, grey dots = history | `vals.a`, `vals.b`, `trail` |
+| Sidebar: indicators | Bar = value; colour = change since 2026 (teal good, orange bad) | `vals` |
+| Sidebar: wildcards | Inject, USED (click again to undo), Reset entire simulation | `fire()`, `restart()` |
+| Debrief | Outcome, no-regret counts, debrief questions, decision log, timeline, ESB test, role statements, limits, Convert-to-text narrative, Run again | `classify(vals)`, `choices`, `hist` |
 
-**Content and validation**
-- All options, effects, starting values and role interests are invented placeholders. The model has not been calibrated or playtested.
-- Indicators have no units, data sources or baselines.
-- No-regret tags are a judgement call and look questionable in places (e.g. MDB contingent credit lines tagged as private-sector involvement; Caribbean "expand CCRIF cover" tagged as capacity building).
-- Indicators never feed back into the axes or the outcome (e.g. high debt does not limit later choices).
-- "Fragmented Patchwork" is the catch-all for everything not in a corner, which is a modelling choice, not something the paper defines.
+## 10. Design system
 
-**Mechanics**
-- `Math.round` is not symmetric for negative halves: with sensitivity 1.25, +2 becomes +3 but −2 becomes −2 (JavaScript rounds −2.5 up to −2). Sensitivity values other than 1 and 2 therefore slightly favour positive effects.
-- Clipping happens after each effect, so the order effects are applied in matters when a value hits 0, 100 or ±25.
-- Linked decisions check option **positions** (0, 1, 2). Reordering options in `ROUNDS` silently breaks them.
-- A wildcard fired before Resolve is not included in that round's result panel (the "before" snapshot is taken at resolve time). A wildcard can also be fired after Resolve, which changes values the result panel does not show.
-- Only the habitability wildcard can auto-fire. If it was already fired by hand, auto-fire is skipped silently.
-- The Resolve button looks greyed until everyone decides but is still clickable; it just does nothing.
-- Roles can only be changed on the setup screen. If a role required for a linked decision is out of play, that decision can never form ("not possible, role not in play").
-- The setup label "of 9 selected" is hard-coded.
+The palette comes from the Evidence & Solutions Brief, adjusted for reading on screen:
 
-**Hard-coded to three rounds** (adding a round needs all of these changed): `choices:[{},{},{}]` in `fresh()`; `Math.min(st.round+1,2)` in `nextLabel`; `repeat(3,…)` in the decision log grid (line ~249).
+| Role | Colour |
+|---|---|
+| Page background | `#F7F9FC` |
+| Cards | `#FFFFFF` |
+| Primary text | `#1F2A37` |
+| Secondary text | `#4A5A6A` |
+| Selected button, current scenario | `#00335B` (navy) |
+| Header accent | `#009ED8` |
+| Likely, Cooperative Resilience, improved | `#00A19B` (teal) |
+| Unlikely, Retrenchment, worsened | `#F58220` (orange) |
+| Fragmented Patchwork | `#0072BC` (blue) |
+| Borders and dividers | `#C9D6E3`, `#DCE5EF` |
 
-**Other**
-- No saving: a page refresh mid-session loses everything.
-- Requires internet (CDN scripts and fonts).
-- The gap analysis tab is static text; it will not update if the model changes.
-- One shared screen only; there is no secret voting or per-player device.
-- Accessibility not reviewed: selected states rely on colour and border; buttons have no `aria-pressed`.
-- No automated tests.
+Fonts: IBM Plex Sans (body) and IBM Plex Mono (labels and numbers), both local in `fonts/`. The brief uses a serif for titles; that is not applied yet.
 
-## 10. Suggested next steps
-
-1. **Replace placeholder content with the team's own.** Write role briefs and decision options with the paper's authors; get baselines and data sources for each indicator.
-2. **Move content out of the code** (section 3, option A) so non-developers can edit roles, options and scenarios in one place. Refer to linked-decision options by an id instead of position.
-3. **Publish an effects annex.** Generate a table of every option's effects from `ROUNDS` so reviewers can check the model.
-4. **Fix the mechanics bugs** in section 9 (rounding, wildcard timing in the result panel, Resolve button state, 3-round hard-coding).
-5. **Add tests** for `apply`, `classify` and round resolution, e.g. "all positive options → Cooperative Resilience", "all negative → Retrenchment".
-6. **Validate the model.** Playtest with two or three interviewees; check that outcomes feel plausible and that no single dominant strategy exists.
-7. **Add feedback loops** where the paper implies them (e.g. debt stress reducing SIDS agency; trust affecting whether linked decisions form).
-8. **Save sessions** (localStorage) and export the decision log (CSV/PDF) for the debrief record.
-9. **Facilitation features:** negotiation timer, printable role cards, pre/post participant survey.
-10. **Make it work offline** by bundling scripts and fonts locally.
+Styling is inline `style="…"` on each element. Colours are typed in place, so changing the palette means changing the values in the file, not in one place.
 
 ## 11. Conventions for contributors
 
-- **Style:** plain JavaScript (no TypeScript, no imports in the logic class). The class must stay named `Component`. Keep logic in the script block; the layout should only read named values from `renderVals()` — the `{{ }}` placeholders cannot contain expressions.
-- **Styling:** inline `style="…"` only, reusing the colours in section 8. Do not edit `support.js`.
-- **Naming:** short lowercase ids for roles (`car`, `pac`…) and variables (`a`, `b`, `gap`…). User-facing labels go in `NAMES` / `SHORT`.
-- **Add a new indicator:** add its key to `KEYS`, `SHORT`, `NAMES`, `START`; add it to `INV` if lower is better; use it in option `fx` objects.
-- **Add a role:** add an entry to `ROLES` and three options under its id in **every** round's `options` (otherwise the round crashes); update the "of 9" label.
-- **Edit options:** change the `o(title, description, effects, tag)` entries in `ROUNDS`. If you reorder options, update any `coalitions[].req` indices that point at them.
-- **Add a linked decision:** add `{n, req:{roleId:[optionIndex,…]}, fx}` to a round's `coalitions`.
-- **Add a wildcard:** add `{id, n, fx, text, prompts}` to `WILD`.
-- **Change scenarios:** edit `SCEN` text and questions; change boundaries via `TH` and `classify`, and update the plot shading (the `64%` values around line 276) to match. Only three scenarios are defined; `classify` returns `s1`, `s3` or `s2`.
-- **Add a round:** add an entry to `ROUNDS` and fix the three hard-coded places listed in section 9.
-- Keep the gap analysis tab in sync manually if the model changes what it describes (e.g. "81 options").
+- **Class name.** The class must stay named `Component`.
+- **Logic and layout.** Logic lives in the script block. The layout only reads named values from `renderVals()`, because the `{{ }}` placeholders cannot contain expressions.
+- **Styling.** Inline `style="…"` only, reusing the palette in section 10.
+- **Runtime.** Do not edit `support.js`.
+- **Naming.** Short lowercase ids for roles (`car`, `pac`, `ais`, `mdb`, `ins`, `reg`, `lm`, `unossc`, `un`) and drivers (`haz`, `coop`, `fin`, `inst`, `tech`). User-facing labels go in the text fields.
+- **Adding a role.** Add it to `ROLES`, its options to every round on Site A, its state sets to `B_OPTIONS`, `B_KEYS`, `B_ACTS` and `B_TAGS` on Site B, its follow-up questions (`QF`), continuations (`FO`) and questions (`QUESTIONS`), and its texts in `BEHAV`, `ROLE_LIMITS`, `DECISION_TR`, `NARR` and the ESB table. Then update the "of 9" labels and regenerate Site B.
+- **Adding a driver.** Add it to `DRIVERS`, `DRV_ROLE`, `DPAT`, `DFX`, and the Drivers tab. The setup, the briefing and the timeline read from `DRIVERS`. This is the step we decided against for debt; it is still possible.
+- **Adding a wildcard.** Add `{id, n, fx, text, prompts}` to `WILD`.
+- **Adding a linked decision.** Add `{n, req, fx}` to a round's coalitions on Site A. On Site B, add the entry to `B_COALS` with keys, and give the relevant options keys in `B_KEYS`.
+- **Changing scenarios.** Edit `SCEN`, `NARR` and the scenario rules in `classify`, then update the plot shading and the Drivers tab.
+- **Adding a round.** Add to `ROUNDS`, and fix the hard-coded three-round places in section 12.
+- **Changing content.** Change the Claude Docs documents first (section 16), then mirror the change in the code.
 
-## 12. Drivers and pathways (added)
+## 12. Known limits and bugs
 
-- **Source of the content:** the driver states, pathways, effects and stakeholder reactions are drafted in the Claude Doc "Driver pathways 2026-2040 (draft)": https://claude.ai/artifact/EsWPh7PQKVitQi9pGPSLUy. Edit the doc first, then mirror changes here.
-- **Constants:** `DRIVERS` (five drivers from section 3 of the paper, with a description per state), `PATHWAYS` (Positive, Medium and Negative pathway; one state per driver per round). Hazard stays Medium until 2035–2040, when the Negative pathway sets it to Negative; the Positive pathway has no hazard change, and `DFX` (effects per driver state, added to the round trend). Medium adds nothing.
-- **State:** `pathway` (set on the setup screen, default `Medium`).
-- **Resolve:** driver effects are applied after the background trend and before the role options.
-- **Briefing:** the play view shows each driver's state for the current round.
-- **Not yet built:** stakeholder reactions in the options (the doc lists them; the simulator does not use them), and driver states in the debrief.
-- **Numbers are placeholders.** The effect sizes in `DFX` are not calibrated.
+**Carried from the original prototype**
+- **Rounding.** `Math.round` is asymmetric for negative halves, so effects are biased slightly at sensitivities other than 1 or 2.
+- **Three rounds are hard-coded** in `fresh()` (`choices`), in the decision log grid, and in the next-round label.
+- **Linked decisions match by position on Site A.** Reordering options silently breaks them.
+- **A wildcard fired before Resolve** is not in that round's result panel, because the "before" snapshot is taken at Resolve. A wildcard fired after Resolve changes values the result panel does not show.
+- **Auto-wildcard is skipped silently** if the habitability wildcard was already fired by hand.
+- **The Resolve button** looks greyed until everyone decides, but it still accepts a click and then does nothing.
+- **Roles can only change on the setup screen.** If a role needed for a linked decision is out of play, that decision can never form.
+- **The setup label "of 9 selected" is hard-coded.**
+- **Accessibility is not reviewed.** Selected states rely on colour and border; buttons have no `aria-pressed`.
+
+**Added in this version**
+- **Undo of a wildcard is not exact** when an indicator is at a bound (0, 100, or ±25), because clipping happens after each effect.
+- **Clipping order matters.** Effects are applied one at a time and clipped after each, so the order in which they apply changes the result when a value reaches 0, 100 or ±25.
+- **Indicators feed back only on Site B, and only as reactions.** Trust and debt lock decisions there. On Site A, indicators are reported but never change the options or the scenario. The scenario depends only on the two axes on both sites.
+- **The gap analysis tab is static text.** It does not update when the model changes, so it must be edited by hand.
+- **Reset returns the drivers to Neutral**, and the roles to unselected.
+- **Site A has no follow-ups, continuations, reactions, track records or annex.** Its options and questions are the same in every round.
+- **Effects annex** lists every option and continuation from the same data the game uses. It does not list linked decisions.
+- **Debrief no-regret counts** on Site B use the tags on options. Options without a tag are not counted.
+- **Narrative and analysis** in the debrief are generated from the run's data with fixed sentences. They describe what happened; they do not argue for a conclusion.
+- **No save.** A page refresh loses the session.
+- **No tests.** Nothing checks `apply`, `classify`, coalition formation or the follow-up logic automatically.
+- **Requires internet** for React, Babel and the fonts' CDN loaders.
+
+## 13. Alignment with the paper
+
+Covered: the five drivers, the three scenarios and their rules, the three wildcards, the scenario debrief questions, the no-regret categories, a role for each stakeholder group in the paper's audience, decision points with their period and trade-off, stakeholder resources and red lines, signposts with indicator, source and threshold (Drivers tab), a test of the four ESB recommendations in each scenario, a round calendar with the milestones of each period, a statement for each role in each scenario reached, a timeline of the run, and the limits of the run.
+
+Partial: stakeholder roles are the draft from the paper's gap list and need team confirmation; the signposts' thresholds are placeholders, except where the brief gives a reference; the ESB test is a set of hypotheses from the brief, not checked in play; the 81 options (and 104 continuations on Site B) carry a period and a trade-off through their role card, not on each option.
+
+Not included, by decision: debt as a sixth driver. Debt stress stays an indicator, with the reaction on Site B. Revisit only if the team asks for it.
+
+Missing: a 2040 timeline of turning points as a visual (the timeline is a list); a facilitator guide inside the app (it is a separate document); an exercise evaluation inside the app.
+
+## 14. Changes from the original README
+
+The first README described the prototype as it was when the project started. This section lists what changed in the model and the product, and why.
+
+| Original | Now | Why |
+|---|---|---|
+| Five scenarios: three from the paper and two unmapped quadrants | Three scenarios; the two off-diagonal corners fold into Fragmented Patchwork | The paper defines three; the team decides whether the quadrants deserve their own scenario |
+| Options and states by pathway (Positive, Medium, Negative) | Each driver has its own choice (Likely, Neutral, Unlikely) | Players decide each driver on its own, as the paper's drivers do |
+| Decisions the same in every round | Site B: options depend on the driver state, and on the role's previous action | The stakeholders react to context and to their own history |
+| One version of the game | Two sites: fixed decisions (A) and decisions by driver state (B) | To compare fixed and driver-dependent decisions in the same game |
+| Decision log and debrief | Plus timeline, ESB test, role statements, limits, narrative | The paper's structure needs these to read a run |
+| Reactions to outcomes not modelled | Trust and debt reactions on Site B | Stakeholders react to what happened to the system |
+| No track records | Track records and behaviour under pressure on Site B cards, from 1986–2026 | The paper asks what each stakeholder can realistically do |
+
+Not carried over, by decision: the split of the content into separate data files (option A of the original). The code stays in one file.
+
+## 15. Next steps
+
+1. Restore the lost sections in the original: done in this version.
+2. Add the sources tab for the Site B cards, and confirm the placeholder thresholds with the team.
+3. Split the UN system into its agencies, and add the voice of communities and inclusion.
+4. Fix the known bugs in section 12, starting with rounding and the hard-coded rounds.
+5. Add a small set of automated tests for `apply`, `classify`, coalition formation and the follow-up logic.
+6. Validate the model with two or three playtests before the full session.
+7. Save sessions, so a page refresh does not lose a run.
+8. Add facilitation aids: a negotiation timer, printable role cards (the card content is already in the app), and a short pre and post survey.
+9. Make the app work offline by bundling the scripts and fonts locally. Only the fonts are bundled now; React and Babel still load from unpkg.
+
+## 16. Related documents
+
+- **Facilitator guide and evaluation (draft):** https://claude.ai/artifact/NZNHzU4JX8CzPWcapUvE2d
+- **Driver pathways 2026–2040 (draft):** https://claude.ai/artifact/EsWPh7PQKVitQi9pGPSLUy
+- **Stakeholder behaviour: recent evidence (2025–2026) and forty years of history:** https://claude.ai/artifact/JJk4pC1DAJcd6CYamaAqHj
+
+These documents are the source for the driver states, the stakeholder track records and the reaction rules. Change them first, then mirror the change in the code.
